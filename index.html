@@ -188,28 +188,11 @@ main{padding:36px 0 72px}
 .week p{color:var(--ink-2);font-size:14.5px}
 .week .tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .tag{font-family:var(--font-mono);font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:3px 9px;color:var(--ink-2)}
-/* ============ Papers ============ */
+/* ============ Filters & badges ============ */
 .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
 .filters select,.filters input{min-height:48px;padding:10px 12px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--radius)}
 .filters input{flex:1;min-width:180px}
-.paper{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);padding:20px 22px;margin-bottom:14px}
-.paper-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline}
-.paper-top h4{font-family:var(--font-display);font-size:19px;font-weight:600}
 .badge{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;border-radius:99px;padding:4px 10px;border:1px solid}
-.badge.mapped{color:var(--accent-strong);border-color:var(--accent);background:var(--accent-soft)}
-.badge.inferred{color:var(--ochre);border-color:var(--line-strong);background:var(--ochre-soft)}
-.paper .meta{color:var(--ink-2);font-size:14px;margin-top:4px}
-.paper .note{color:var(--ink-2);font-size:14px;margin-top:8px}
-.comp-chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
-.comp-chips button{min-height:40px;padding:6px 12px;border-radius:99px;border:1px solid var(--line-strong);background:var(--paper);font-size:13.5px;font-weight:600;color:var(--accent-strong)}
-.comp-chips button:hover{background:var(--accent-soft)}
-.qmap{display:none;margin-top:14px;border-top:1px dashed var(--line-strong);padding-top:12px}
-.paper.showmap .qmap{display:block}
-.qmap-row{padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
-.qmap-row:last-child{border-bottom:none}
-.qmap-row .qq{font-weight:600}
-.qmap-row .qt{color:var(--ink-2)}
-.paper-actions{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 /* ============ Quiz ============ */
 .quiz-pick{display:grid;gap:10px}
 @media (min-width:720px){.quiz-pick{grid-template-columns:1fr 1fr}}
@@ -308,7 +291,6 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
   <nav class="mainnav" aria-label="Sections">
     <div class="mainnav-in" role="tablist">
       <button type="button" role="tab" data-view="learn" aria-selected="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Learn</button>
-      <button type="button" role="tab" data-view="papers" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Past papers</button>
       <button type="button" role="tab" data-view="assess" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5a3 3 0 0 1 6 0M9.5 13.5l2 2 3.5-4"/></svg>Assessment</button>
       <button type="button" role="tab" data-view="ask" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>Ask the TA</button>
     </div>
@@ -334,19 +316,6 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
 
     
 
-    <section class="view" id="view-papers" aria-label="G.C.E. O/L past papers">
-      <div class="page-head">
-        <p class="eyebrow">Practise with the real exam</p>
-        <h2>G.C.E. O/L past papers, mapped question by question</h2>
-        <p class="lede">The six English-medium O/L ICT papers, 2020–2025, from the ictfromabc.com paper library. Every paper was read in full: open a question map and each question ID — Paper I Q1, Paper II Q3 — sits beside the chapter it tests. Tap a chapter chip to jump to that lesson, or open the PDF and sit the paper under exam conditions.</p>
-      </div>
-      <div class="filters">
-        <select id="fYear" aria-label="Filter by year"><option value="">All years</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option></select>
-        <input id="fSearch" type="search" placeholder="Search a topic — e.g. HTML, binary, primary key…" aria-label="Search question topics" />
-      </div>
-      <p class="small muted" id="paperCount" style="margin-bottom:16px"></p>
-      <div id="paperList"></div>
-    </section>
 
     
 
@@ -426,7 +395,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
       </div>
     </section>
   </main>
-  <footer><div class="wrap">Learn presents the official ICT textbooks for Grades 10 and 11 (Educational Publications Department) — the section text in Learn is the textbooks&rsquo; own. Past papers: G.C.E. O/L ICT, English medium, 2020–2025, from the ictfromabc.com paper library — each card links directly to its PDF. Static edition: deploy this single file to Vercel, Netlify, or GitHub Pages as-is.</div></footer>
+  <footer><div class="wrap">Learn presents the official ICT textbooks for Grades 10 and 11 (Educational Publications Department) — the section text in Learn is the textbooks&rsquo; own. Past papers: G.C.E. O/L ICT, English medium, 2020–2025, from the ictfromabc.com paper library. Static edition: deploy this single file to Vercel, Netlify, or GitHub Pages as-is.</div></footer>
 </div>
 
 <script>
@@ -961,55 +930,6 @@ function renderComps(){
   });});
 }
 
-function groupQm(qm){
-  const order = [], by = {};
-  qm.forEach(function(m){
-    if (!by[m.c]) { by[m.c] = { c:m.c, rows:[] }; order.push(by[m.c]); }
-    by[m.c].rows.push(m);
-  });
-  return order;
-}
-function renderPapers(){
-  const y = $("fYear").value, q = $("fSearch").value.trim().toLowerCase();
-  const list = PAPERS.filter(function(p){
-    if (y && String(p.y)!==y) return false;
-    if (q){
-      const hay = p.qm.map(function(m){ const c = COMP_BY_ID[m.c]; return m.q+" "+m.t+" competency "+m.c+" "+(c?c.t:""); }).join(" ").toLowerCase();
-      if (hay.indexOf(q)===-1) return false;
-    }
-    return true;
-  });
-  $("paperCount").textContent = "Showing "+list.length+" of "+PAPERS.length+" papers · every question mapped to its chapter";
-  $("paperList").innerHTML = list.length ? list.map(function(p, i){
-    const groups = groupQm(p.qm);
-    return '<article class="paper" id="paper-'+i+'"><div class="paper-top"><h4>G.C.E. O/L ICT — '+p.y+'</h4>'
-      + '<span class="badge mapped">Mapped question by question</span></div>'
-      + '<p class="meta">English medium · Paper I &amp; Paper II · '+p.qm.length+' questions mapped · Source: ictfromabc.com</p>'
-      + '<div class="comp-chips" aria-label="Competencies covered">' + groups.map(function(gr){
-          const comp = COMP_BY_ID[gr.c]; return comp ? '<button type="button" data-goto="'+gr.c+'">C'+gr.c+' · '+comp.t.split(":")[0].slice(0,34)+(comp.t.length>34?"…":"")+'</button>' : '';
-        }).join("") + '</div>'
-      + '<div class="qmap">' + groups.map(function(gr){
-          const comp = COMP_BY_ID[gr.c];
-          return '<div class="qmap-row"><span class="qq">Competency '+gr.c+(comp?' — '+comp.t:'')+'</span><br>'
-            + gr.rows.map(function(m){ return '<span class="qt"><strong>'+esc(m.q)+'</strong> · '+esc(m.t)+'</span>'; }).join('<br>') + '</div>';
-        }).join("") + '</div>'
-      + '<div class="paper-actions">'
-      + '<button type="button" class="chip-btn" data-map="'+i+'">Question map</button>'
-      + '<a class="chip-btn" href="'+p.u+'" target="_blank" rel="noopener">Open the paper (PDF)</a>'
-      + '<a class="chip-btn" href="'+p.list+'" target="_blank" rel="noopener">All O/L papers at ictfromabc.com</a></div></article>';
-  }).join("") : '<div class="empty">No papers match that search. Try a different year or topic.</div>';
-  document.querySelectorAll("[data-goto]").forEach(function(b){ b.addEventListener("click", function(){
-    const cid = b.getAttribute("data-goto"); showView("learn");
-    const comp = $("comp-"+cid); comp.classList.add("open");
-    const t = comp.querySelector("[data-toggle]"); t.textContent="Hide lessons"; t.setAttribute("aria-expanded","true");
-    comp.scrollIntoView({ behavior:"smooth", block:"start" });
-  });});
-  document.querySelectorAll("[data-map]").forEach(function(b){ b.addEventListener("click", function(){
-    const card = $("paper-"+b.getAttribute("data-map")); const on = card.classList.toggle("showmap");
-    b.textContent = on ? "Hide question map" : "Question map";
-  });});
-}
-
 const TA_TOPICS = [
  {k:["binary","convert","octal","hex"], c:3, h:"Number systems, in short", b:"Computers store everything as 1s and 0s. To convert decimal → binary, divide by 2 and read the remainders upwards; group binary digits in 3s for octal and 4s for hex. Going back, multiply each digit by its place value (1, 2, 4, 8…). Try 75₁₀ = 1001011₂."},
  {k:["mail merge"], c:6, h:"Mail merge", b:"Mail merge combines a main document with a data source (a list of names and addresses) so one letter becomes many personalised letters. It is the most-tested word-processing feature in Part II."},
@@ -1053,8 +973,7 @@ function renderAsk(){
   });
 }
 
-function renderAll(){ renderComps(); renderPapers(); renderProgress(); }
-["fYear","fSearch"].forEach(function(id){ $(id).addEventListener("input", renderPapers); });
+function renderAll(){ renderComps(); renderProgress(); }
 
 /* ==================== ASSESSMENT STORE ====================
    Scores, streaks and per-competency mastery, kept in this
@@ -1083,11 +1002,6 @@ function aRecordStruct(q, pts, max){
   const cs = aComp(q.c); cs.sp += pts; cs.sm += max;
   astore.tot.sp += pts; astore.tot.sm += max;
   aTouch(); aSave();
-}
-function masteryOf(c){
-  const cs = astore.comp[c]; if (!cs) return null;
-  const got = cs.cor + cs.sp, of = cs.a + cs.sm;
-  return of ? Math.round(got / of * 100) : null;
 }
 
 /* ==================== ASSESSMENT HELPERS ==================== */
@@ -1136,16 +1050,7 @@ function renderAssess(){
     + '<div class="stat"><div class="n">' + t.sp + ' / ' + t.sm + '</div><div class="l">Paper II marking points earned</div></div>'
     + '<div class="stat"><div class="n">' + (lastExam ? lastExam.s + " / " + lastExam.m : "—") + '</div><div class="l">' + (lastExam ? "Last exam simulation (" + lastExam.d + ")" : "Exam simulations taken: 0") + '</div></div>'
     + '</div>'
-    + '<h4 style="font-family:var(--font-display);font-size:18px;margin:22px 0 4px">Mastery by competency</h4>'
-    + '<p class="tiny muted" style="margin-bottom:8px">Combines first-try MCQ answers and Paper II marking points earned. Best streak so far: ' + astore.streak.best + ' day' + (astore.streak.best === 1 ? "" : "s") + '.</p>';
-  html += COMPS.map(function(c){
-    const pct = masteryOf(c.id), cs = astore.comp[c.id];
-    const detail = cs && (cs.a + cs.sm) ? "MCQ " + cs.cor + "/" + cs.a + (cs.sm ? " · Paper II " + cs.sp + "/" + cs.sm : "") : "Not started yet";
-    return '<div class="mrow"><span class="comp-num">C' + c.id + '</span>'
-      + '<div><div class="mt">' + esc(c.t) + '</div><div class="track" role="progressbar" aria-label="Mastery for competency ' + c.id + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + (pct || 0) + '"><i style="width:' + (pct || 0) + '%"></i></div>'
-      + '<div class="tiny muted">' + detail + '</div></div>'
-      + '<span class="mp">' + (pct === null ? "—" : pct + "%") + '</span></div>';
-  }).join("");
+    + '<p class="tiny muted" style="margin-top:10px">Best streak so far: ' + astore.streak.best + ' day' + (astore.streak.best === 1 ? "" : "s") + '.</p>';
   if (astore.exams.length){
     html += '<p class="small muted" style="margin-top:14px">Exam history: ' + astore.exams.slice(-5).map(function(e){ return e.d + " — " + e.s + "/" + e.m; }).join(" · ") + '</p>';
   }
