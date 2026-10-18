@@ -85,6 +85,11 @@ svg.ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-wid
 .mainnav-in::-webkit-scrollbar{display:none}
 .mainnav button{display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:10px 14px;border:none;background:none;font-size:15px;font-weight:600;color:var(--ink-2);border-bottom:3px solid transparent;white-space:nowrap}
 .mainnav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:560px){
+  .mainnav-in{padding:0 6px;overflow-x:visible}
+  .mainnav button{flex:1 1 0;min-width:0;justify-content:center;padding:10px 4px;gap:6px;font-size:14px}
+  .mainnav button svg.ic{width:18px;height:18px}
+}
 main{padding:36px 0 72px}
 .view{display:none}.view.active{display:block}
 /* ============ Home / progress ============ */
@@ -274,6 +279,13 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
 .tb-p{color:var(--ink-2);font-size:15px;line-height:1.66;margin:0 0 10px}
 .tb-h{font-family:var(--font-display);font-size:15.5px;font-weight:600;color:var(--ink);margin:16px 0 6px}
 .tb-pre{font-family:var(--font-mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 12px;color:var(--ink-2)}
+/* ============ Textbook tables ============ */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table.tb-table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5;color:var(--ink)}
+.tb-table th,.tb-table td{padding:8px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tb-table thead th{background:var(--accent-soft);color:var(--ink);font-weight:700;border-bottom:2px solid var(--accent)}
+.tb-table tbody tr:nth-child(even){background:var(--surface-2)}
+.tb-table tbody tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
@@ -323,9 +335,9 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
       <div class="page-head">
         <p class="eyebrow">Assessment</p>
         <h2>Be assessed the way the exam assesses you</h2>
-        <p class="lede">The full question bank: 285 multiple-choice questions (240 from the real 2020–2025 Paper I papers, plus 45 generated) and 294 Paper II structured parts (279 real, plus 15 generated). Every question is mapped to its textbook section, so a wrong answer always tells you exactly what to revise. Your scores, streak and mastery per chapter are kept on this device.</p>
+        <p class="lede">The full question bank: 285 multiple-choice questions (240 from the real 2020–2025 Paper I papers, plus 45 generated) and 294 Paper II structured parts (279 real, plus 15 generated). Every question is mapped to its textbook section, so a wrong answer always tells you exactly what to revise. Your scores and streak are kept on this device.</p>
       </div>
-      <div class="progress-block" id="assessDash" aria-label="Your mastery dashboard"></div>
+      <div class="progress-block" id="assessDash" aria-label="Your assessment summary"></div>
       <div class="amodes" role="group" aria-label="Assessment modes">
         <button type="button" class="amode-btn" data-amode="drill" aria-pressed="true">MCQ drill</button>
         <button type="button" class="amode-btn" data-amode="struct" aria-pressed="false">Paper II practice</button>
@@ -335,7 +347,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
       <div id="amode-drill">
         <div class="asetup" id="drillSetup">
           <h3>MCQ drill — Paper I</h3>
-          <p class="small muted" style="margin-bottom:14px">Random questions, instant feedback. Get one wrong and you get a guided hint and one more try before the answer is revealed — mastery counts first-try answers, just like the real paper.</p>
+          <p class="small muted" style="margin-bottom:14px">Random questions, instant feedback. Get one wrong and you get a guided hint and one more try before the answer is revealed — only first-try answers count, just like the real paper.</p>
           <div class="filters">
             <label class="flabel">Difficulty
               <select id="dDiff" aria-label="Difficulty filter"><option value="all">All difficulties</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select>
@@ -808,13 +820,33 @@ function renderProgress(){
   $("statUnits").textContent = done+" / "+TOTAL_UNITS;
 }
 
+/* A textbook "pre" block whose lines form a clean grid (same number of
+   columns on every line, split on runs of 2+ spaces) is a real table:
+   render it as one, with the first row as the header. Anything less
+   regular stays a pre block. */
+function tbTableHtml(text){
+  const lines = String(text).split("\n").filter(function(l){ return l.trim(); });
+  if (lines.length < 3) return null;
+  const rows = lines.map(function(l){ return l.trim().split(/\s{2,}|\t/).map(function(c){ return c.trim(); }); });
+  const n = rows[0].length;
+  if (n < 2 || n > 5) return null;
+  for (let i = 0; i < rows.length; i++){ if (rows[i].length !== n) return null; }
+  let hsum = 0;
+  for (let j = 0; j < n; j++){ if (rows[0][j].length > 40) return null; hsum += rows[0][j].length; }
+  if (hsum > 100) return null;
+  for (let i = 1; i < rows.length; i++){ for (let j = 0; j < n; j++){ if (rows[i][j].length > 160) return null; } }
+  return '<div class="tbl-wrap"><table class="tb-table"' + (n > 3 ? ' style="min-width:' + (n * 130) + 'px"' : '') + '><thead><tr>'
+    + rows[0].map(function(c){ return '<th scope="col">' + esc(c) + '</th>'; }).join("") + '</tr></thead><tbody>'
+    + rows.slice(1).map(function(r){ return '<tr>' + r.map(function(c){ return '<td>' + esc(c) + '</td>'; }).join("") + '</tr>'; }).join("")
+    + '</tbody></table></div>';
+}
 function tbBlocks(blocks){
   let html = "", listOpen = false;
   blocks.forEach(function(b){
     if (b[0] === "li"){ if (!listOpen){ html += "<ul>"; listOpen = true; } html += "<li>"+esc(b[1])+"</li>"; return; }
     if (listOpen){ html += "</ul>"; listOpen = false; }
     if (b[0] === "h") html += '<h6 class="tb-h">'+esc(b[1])+"</h6>";
-    else if (b[0] === "pre") html += '<pre class="tb-pre">'+esc(b[1])+"</pre>";
+    else if (b[0] === "pre"){ const th = tbTableHtml(b[1]); html += th || ('<pre class="tb-pre">'+esc(b[1])+"</pre>"); }
     else html += '<p class="tb-p">'+esc(b[1])+"</p>";
   });
   if (listOpen) html += "</ul>";
@@ -976,7 +1008,7 @@ function renderAsk(){
 function renderAll(){ renderComps(); renderProgress(); }
 
 /* ==================== ASSESSMENT STORE ====================
-   Scores, streaks and per-competency mastery, kept in this
+   Scores and streaks, kept in this
    browser's localStorage under its own key (separate from the
    lesson/quiz progress store above). */
 const A_KEY = "ol-ict-ta-assess-v1";
@@ -1008,6 +1040,14 @@ function aRecordStruct(q, pts, max){
 function shuffle(a){ const x = a.slice(); for (let i = x.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); const t = x[i]; x[i] = x[j]; x[j] = t; } return x; }
 function sample(a, n){ return shuffle(a).slice(0, n); }
 function pdfForYear(y){ const p = PAPERS.filter(function(x){ return x.y === y; })[0]; return p ? p.u : null; }
+/* PDF page (1-based) of the printed figure for every figure-dependent
+   question, mapped from the papers in figure-page-links.json. */
+const FIG_PAGES = {"2020-I-Q13":3,"2020-I-Q26":5,"2020-I-Q34":5,"2020-I-Q35":5,"2021-I-Q12":2,"2021-I-Q23":4,"2021-I-Q28":5,"2021-I-Q30":5,"2021-I-Q34":6,"2021-I-Q35":6,"2021-I-Q39":6,"2022-I-Q5":2,"2022-I-Q11":2,"2022-I-Q13":2,"2022-I-Q39":5,"2023-I-Q11":2,"2023-I-Q13":2,"2023-I-Q15":2,"2023-I-Q29":4,"2023-I-Q30":4,"2024-I-Q4":1,"2024-I-Q11":2,"2024-I-Q25":4,"2024-I-Q26":4,"2024-I-Q27":4,"2024-I-Q36":5,"2025-I-Q11":2,"2025-I-Q12":2,"2025-I-Q13":2,"2025-I-Q25":4,"2025-I-Q26":4,"2025-I-Q27":4,"2025-I-Q28":4,"2022-II-Q1-vi":7,"2025-II-Q1-ii-c":6,"2025-II-Q1-vi-a":7,"2022-II-Q1-ii-a":6,"2022-II-Q1-ii-b":6,"2022-II-Q1-v":6,"2022-II-Q1-vii-a":6,"2023-II-Q1-ii-a":6,"2023-II-Q1-ii-b":6,"2024-II-Q1-ii-a":6,"2024-II-Q1-ii-b":6,"2024-II-Q1-ii-c":6,"2024-II-Q1-ii-d":6,"2024-II-Q1-iv-b":6,"2024-II-Q1-v-a":6,"2024-II-Q1-vii":6,"2024-II-Q4-i":7,"2024-II-Q4-iii":7,"2025-II-Q1-ii-a":6,"2025-II-Q1-ii-b":6,"2025-II-Q1-ii-d":6,"2025-II-Q1-iv-b":6,"2025-II-Q2-iii":8};
+function figPageLink(q, paper){
+  const pg = FIG_PAGES[q.i], pdf = q.y ? pdfForYear(q.y) : null;
+  if (!pg || !pdf) return "";
+  return '<a href="' + pdf + '#page=' + pg + '" target="_blank" rel="noopener">View figure — O/L ' + q.y + ' Paper ' + paper + ', page ' + pg + '</a>';
+}
 function chapterOf(b){ const m = /^(G1[01] Ch\.\d+)/.exec(b || ""); return m ? m[1] : (b || ""); }
 function chapterComp(ch){ const m = /^G(1[01]) Ch\.(\d+)$/.exec(ch || ""); if (!m) return null; return m[1] === "10" ? parseInt(m[2], 10) : parseInt(m[2], 10) + 9; }
 function srcOfMCQ(q){ return q.g ? "Generated question" : "O/L " + q.y + " Paper I Q" + q.n; }
@@ -1037,12 +1077,12 @@ function fillChapterSelect(sel, bank){
   });
 }
 
-/* ==================== MASTERY DASHBOARD ==================== */
+/* ==================== ASSESSMENT SUMMARY ==================== */
 function renderAssess(){
   const t = astore.tot;
   const acc = t.ans ? Math.round(t.cor / t.ans * 100) : null;
   const lastExam = astore.exams.length ? astore.exams[astore.exams.length - 1] : null;
-  let html = '<div class="progress-top"><span class="muted small">Mastery dashboard — saved on this device</span>'
+  let html = '<div class="progress-top"><span class="muted small">Your scores — saved on this device</span>'
     + '<span class="big">' + astore.streak.cur + ' <span class="muted" style="font-size:16px;font-family:var(--font-text);font-weight:500">day streak' + (astore.streak.cur === 1 ? "" : "s") + '</span></span></div>'
     + '<div class="stat-row">'
     + '<div class="stat"><div class="n">' + t.ans + '</div><div class="l">MCQs answered</div></div>'
@@ -1060,7 +1100,7 @@ function renderAssess(){
     if (this.getAttribute("data-arm")) {
       astore = { comp:{}, streak:{cur:0,best:0,last:""}, exams:[], tot:{ans:0,cor:0,sp:0,sm:0} };
       aSave(); renderAssess();
-    } else { this.setAttribute("data-arm", "1"); this.textContent = "Tap again to confirm — this clears scores, streaks and mastery"; }
+    } else { this.setAttribute("data-arm", "1"); this.textContent = "Tap again to confirm — this clears scores and streaks"; }
   });
 }
 
@@ -1105,10 +1145,10 @@ function renderDrillQ(){
   const head = '<div class="exam-top"><span class="sess-line">Drill · answered ' + drill.answered + ' · first-try correct ' + drill.first + '</span></div>'
     + metaLine(srcOfMCQ(q), q, "I");
   if (q.f){
-    const pdf = pdfForYear(q.y);
+    const pdf = pdfForYear(q.y), fig = figPageLink(q, "I");
     body.innerHTML = '<div class="qbox">' + head
       + '<div class="fig-note"><strong>See the original paper figure.</strong> This question is based on a figure printed in the paper, and its answer is not verified here — so it is not scored. Think through the options, then check yourself against the paper.'
-      + (pdf ? ' <a href="' + pdf + '" target="_blank" rel="noopener">Open the O/L ' + q.y + ' paper (PDF)</a>' : '') + '</div>'
+      + (fig ? ' ' + fig : (pdf ? ' <a href="' + pdf + '" target="_blank" rel="noopener">Open the O/L ' + q.y + ' paper (PDF)</a>' : '')) + '</div>'
       + '<h3>' + esc(q.q) + '</h3><div class="opts">'
       + q.o.map(function(opt, i){ return '<div class="opt static"><span class="letter">' + String.fromCharCode(65 + i) + '</span><span>' + esc(opt) + '</span></div>'; }).join("")
       + '</div><div class="quiz-nav"><button type="button" class="btn btn-ghost" id="dEnd">End drill</button>'
@@ -1165,7 +1205,7 @@ function endDrill(){
   const pct = drill.answered ? Math.round(drill.first / drill.answered * 100) : 0;
   $("drillBody").innerHTML = '<div class="qbox" style="text-align:center"><span class="qcount">MCQ drill · session over</span>'
     + '<h3 style="font-size:30px;margin:14px 0 8px">' + drill.first + ' / ' + drill.answered + ' first-try correct (' + pct + '%)</h3>'
-    + '<p class="muted">' + (drill.answered === 0 ? "No scored questions this time — figure questions are for viewing against the printed paper." : "Your mastery dashboard above has already updated. The chapters with the lowest mastery are the ones to drill next.") + '</p>'
+    + '<p class="muted">' + (drill.answered === 0 ? "No scored questions this time — figure questions are for viewing against the printed paper." : "Your summary above has already updated — the questions you missed point you to the chapters to drill next.") + '</p>'
     + '<div class="quiz-nav" style="justify-content:center"><button type="button" class="btn btn-primary" id="dAgain">Drill again</button></div></div>';
   $("dAgain").addEventListener("click", function(){ $("drillBody").style.display = "none"; $("drillSetup").style.display = "block"; drillPoolNote(); });
   drill = null;
@@ -1199,11 +1239,11 @@ function spNext(){
   renderStructQ();
 }
 function renderStructQ(){
-  const q = sp.cur, pdf = q.y ? pdfForYear(q.y) : null;
+  const q = sp.cur, pdf = q.y ? pdfForYear(q.y) : null, fig = figPageLink(q, "II");
   $("structBody").innerHTML = '<div class="qbox"><div class="exam-top"><span class="sess-line">Paper II practice · ' + sp.done + ' marked · ' + sp.earned + ' / ' + sp.of + ' points earned</span></div>'
     + metaLine(srcOfStruct(q), q, "II")
     + '<h3 style="font-size:20px">' + esc(q.q) + '</h3>'
-    + (pdf ? '<p class="small" style="margin-bottom:12px"><a href="' + pdf + '" target="_blank" rel="noopener">Open the O/L ' + q.y + ' paper (PDF)</a> <span class="muted">— if this part refers to a figure or table, it is printed there.</span></p>' : '')
+    + (fig ? '<p class="small" style="margin-bottom:12px">' + fig + ' <span class="muted">— this part is based on a figure printed in the paper.</span></p>' : (pdf ? '<p class="small" style="margin-bottom:12px"><a href="' + pdf + '" target="_blank" rel="noopener">Open the O/L ' + q.y + ' paper (PDF)</a> <span class="muted">— if this part refers to a figure or table, it is printed there.</span></p>' : ''))
     + '<label class="flabel" style="display:grid;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-2)">Write your answer first — as you would in the exam'
     + '<textarea class="answerbox" id="spAttempt" placeholder="Write your answer here…"></textarea></label>'
     + '<div class="quiz-nav"><button type="button" class="btn btn-ghost" id="spEnd">End practice</button>'
@@ -1283,9 +1323,9 @@ function renderExamPage(){
     inner += metaLine(srcOfMCQ(q), q, "I") + '<h3>' + esc(q.q) + '</h3><div class="opts">'
       + q.o.map(function(opt, oi){ return '<button type="button" class="opt' + (exam.ans[i] === oi ? " picked" : "") + '" data-eopt="' + oi + '"><span class="letter">' + String.fromCharCode(65 + oi) + '</span><span>' + esc(opt) + '</span></button>'; }).join("") + '</div>';
   } else {
-    const pdf = q.y ? pdfForYear(q.y) : null;
+    const pdf = q.y ? pdfForYear(q.y) : null, fig = figPageLink(q, "II");
     inner += metaLine(srcOfStruct(q), q, "II") + '<h3 style="font-size:20px">' + esc(q.q) + '</h3>'
-      + (pdf ? '<p class="small" style="margin-bottom:12px"><a href="' + pdf + '" target="_blank" rel="noopener">Open the O/L ' + q.y + ' paper (PDF)</a> <span class="muted">— if this part refers to a figure or table, it is printed there.</span></p>' : '')
+      + (fig ? '<p class="small" style="margin-bottom:12px">' + fig + ' <span class="muted">— this part is based on a figure printed in the paper.</span></p>' : (pdf ? '<p class="small" style="margin-bottom:12px"><a href="' + pdf + '" target="_blank" rel="noopener">Open the O/L ' + q.y + ' paper (PDF)</a> <span class="muted">— if this part refers to a figure or table, it is printed there.</span></p>' : ''))
       + '<textarea class="answerbox" id="eAttempt" placeholder="Write your answer here…">' + esc(exam.ans[i] || "") + '</textarea>';
   }
   inner += '<div class="quiz-nav">'
@@ -1381,7 +1421,7 @@ function examResults(){
   exam.phase = "done";
   $("examBody").innerHTML = '<div class="qbox"><span class="qcount">Exam simulation · results</span>'
     + '<h3 style="font-size:30px;margin:14px 0 8px">You scored ' + total + ' / ' + max + '</h3>'
-    + '<p class="muted">MCQs ' + exam.mcqScore + ' / 10 · Structured ' + spPts + ' / ' + spMax + ' marking points. This result is saved in your exam history and your mastery dashboard.</p>'
+    + '<p class="muted">MCQs ' + exam.mcqScore + ' / 10 · Structured ' + spPts + ' / ' + spMax + ' marking points. This result is saved in your exam history above.</p>'
     + '<h4 style="font-family:var(--font-display);font-size:19px;margin:22px 0 6px">Breakdown by competency</h4>'
     + Object.keys(per).sort(function(a, b){ return a - b; }).map(function(c){
         const p = per[c], comp = COMP_BY_ID[c], got = p.mc + p.sp, of = p.ma + p.sm, pct = of ? Math.round(got / of * 100) : 0;
