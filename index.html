@@ -20,6 +20,8 @@
   --ochre:#9A6B0F; --ochre-soft:#FAF1DC;
   --danger:#A62B1F; --danger-soft:#F9E9E6;
   --ok:#17604A;
+  --ill-blue:#38618C; --ill-blue-soft:#E9EFF5;
+  --ill-rust:#9C4A1F; --ill-rust-soft:#F8ECE3;
   --radius:10px; --radius-lg:16px;
   --font-text:"Public Sans",-apple-system,"Segoe UI",sans-serif;
   --font-display:"Newsreader",Georgia,"Times New Roman",serif;
@@ -35,6 +37,8 @@
     --ochre:#D9A83F; --ochre-soft:#2E2716;
     --danger:#E88A7D; --danger-soft:#33201C;
     --ok:#63C093;
+    --ill-blue:#8FB0D4; --ill-blue-soft:#223140;
+    --ill-rust:#D99A6C; --ill-rust-soft:#33241B;
   }
 }
 /* ============ Base ============ */
@@ -153,6 +157,30 @@ main{padding:36px 0 72px}
 .qfb.show{display:block}
 .qfb.good{background:var(--accent-soft);border:1px solid var(--accent)}
 .qfb.bad{background:var(--danger-soft);border:1px solid var(--danger)}
+/* ============ Lesson illustrations (inline SVG) ============ */
+.illus{margin:4px 0 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 14px 10px}
+.illus svg{width:100%;height:auto;display:block}
+.illus figcaption{margin-top:10px;font-size:13.5px;color:var(--ink-2);border-top:1px dashed var(--line-strong);padding-top:9px}
+.illus figcaption strong{color:var(--accent-strong)}
+.illus svg text{font-family:var(--font-text);font-size:13.5px;fill:var(--ink)}
+.illus .sv-t{font-size:14.5px;font-weight:700;fill:var(--ink)}
+.illus .sv-s{font-size:12px;fill:var(--ink-2)}
+.illus .sv-xs{font-size:11px;fill:var(--ink-2)}
+.illus .mono{font-family:var(--font-mono);font-size:13px}
+.illus .mono-b{font-family:var(--font-mono);font-size:13px;font-weight:700}
+.illus .big{font-size:19px;font-weight:700}
+.illus .sv-bx{fill:var(--surface-2);stroke:var(--line-strong);stroke-width:1.5}
+.illus .sv-g{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.illus .sv-o{fill:var(--ochre-soft);stroke:var(--ochre);stroke-width:1.5}
+.illus .sv-bl{fill:var(--ill-blue-soft);stroke:var(--ill-blue);stroke-width:1.5}
+.illus .sv-r{fill:var(--ill-rust-soft);stroke:var(--ill-rust);stroke-width:1.5}
+.illus .sv-cell{fill:var(--surface);stroke:var(--line);stroke-width:1}
+.illus .sv-ln{stroke:var(--ink-2);stroke-width:1.8;fill:none}
+.illus .sv-thin{stroke:var(--line-strong);stroke-width:1.2;fill:none}
+.illus .bdg{fill:var(--accent)}
+.illus .bdg-t{fill:#fff;font-weight:700;font-size:12px}
+@media (prefers-color-scheme: dark){.illus .bdg-t{fill:#0E1A13}}
+.illus .u{text-decoration:underline}
 /* ============ Week plan ============ */
 .week{display:grid;grid-template-columns:64px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
 .week .wn{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--accent-strong)}
@@ -442,6 +470,309 @@ function saveProgress(){
   renderProgress();
 }
 
+/* ==================== LESSON ILLUSTRATIONS (inline SVG) ==================== */
+const ILLUS = {
+"2.4": { cap: "Paper II loves this diagram with the labels blanked out. Practise naming the CU, ALU, registers and memory — and say which bus carries what — until you can redraw it from memory.",
+svg: "<svg viewBox='0 0 720 356' role='img' aria-label='Block diagram of a computer: input feeds the CPU, which contains the control unit, ALU and registers, exchanges instructions and results with main memory, and sends results to output, all joined by buses'>"
++ "<defs><marker id='m24' markerWidth='8' markerHeight='8' refX='7' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6 Z' style='fill:var(--ink-2)'/></marker></defs>"
++ "<text x='20' y='26' class='sv-t'>One instruction’s journey through the computer</text>"
++ "<rect x='185' y='45' width='310' height='232' rx='12' fill='none' stroke='var(--accent)' stroke-width='1.5' stroke-dasharray='6 4'/>"
++ "<text x='200' y='70' class='sv-t' style='fill:var(--accent-strong)'>CPU — CENTRAL PROCESSING UNIT</text>"
++ "<rect x='20' y='140' width='120' height='70' rx='8' class='sv-g'/><text x='80' y='168' text-anchor='middle' class='sv-t'>INPUT</text><text x='80' y='190' text-anchor='middle' class='sv-s'>keyboard · mouse</text>"
++ "<rect x='210' y='88' width='130' height='76' rx='8' class='sv-bl'/><text x='275' y='118' text-anchor='middle' class='sv-t'>Control Unit</text><text x='275' y='138' text-anchor='middle' class='sv-s'>directs every step</text>"
++ "<rect x='360' y='88' width='115' height='76' rx='8' class='sv-o'/><text x='417' y='118' text-anchor='middle' class='sv-t'>ALU</text><text x='417' y='138' text-anchor='middle' class='sv-s'>maths + logic</text>"
++ "<rect x='210' y='184' width='265' height='58' rx='8' class='sv-g'/><text x='342' y='208' text-anchor='middle' class='sv-t'>Registers</text><text x='342' y='228' text-anchor='middle' class='sv-s'>the CPU’s own tiny, fastest storage</text>"
++ "<rect x='545' y='88' width='155' height='86' rx='8' class='sv-o'/><text x='622' y='116' text-anchor='middle' class='sv-t'>MAIN MEMORY</text><text x='622' y='136' text-anchor='middle' class='sv-s'>RAM — holds the</text><text x='622' y='152' text-anchor='middle' class='sv-s'>program + data</text>"
++ "<rect x='545' y='212' width='155' height='68' rx='8' class='sv-g'/><text x='622' y='240' text-anchor='middle' class='sv-t'>OUTPUT</text><text x='622' y='260' text-anchor='middle' class='sv-s'>monitor · printer</text>"
++ "<line x1='140' y1='175' x2='183' y2='175' class='sv-ln' marker-end='url(#m24)'/><text x='161' y='162' text-anchor='middle' class='sv-s'>data in</text>"
++ "<line x1='545' y1='110' x2='497' y2='110' class='sv-ln' marker-end='url(#m24)'/><text x='521' y='98' text-anchor='middle' class='sv-s'>fetch</text>"
++ "<line x1='495' y1='150' x2='543' y2='150' class='sv-ln' marker-end='url(#m24)'/><text x='519' y='168' text-anchor='middle' class='sv-s'>store</text>"
++ "<line x1='495' y1='246' x2='543' y2='246' class='sv-ln' marker-end='url(#m24)'/><text x='519' y='234' text-anchor='middle' class='sv-s'>result</text>"
++ "<path d='M212,120 L198,120 L198,300 L80,300 L80,212' fill='none' stroke='var(--ill-rust)' stroke-width='1.5' stroke-dasharray='5 4' marker-end='url(#m24)'/>"
++ "<path d='M198,300 L712,300 L712,131 L702,131' fill='none' stroke='var(--ill-rust)' stroke-width='1.5' stroke-dasharray='5 4' marker-end='url(#m24)'/>"
++ "<text x='360' y='318' text-anchor='middle' class='sv-s' style='fill:var(--ill-rust)'>control signals — the CU tells every part what to do, and when</text>"
++ "<circle cx='152' cy='175' r='11' class='bdg'/><text x='152' y='179' text-anchor='middle' class='bdg-t'>1</text>"
++ "<circle cx='521' cy='110' r='11' class='bdg'/><text x='521' y='114' text-anchor='middle' class='bdg-t'>2</text>"
++ "<circle cx='472' cy='92' r='11' class='bdg'/><text x='472' y='96' text-anchor='middle' class='bdg-t'>3</text>"
++ "<circle cx='519' cy='246' r='11' class='bdg'/><text x='519' y='250' text-anchor='middle' class='bdg-t'>4</text>"
++ "<text x='360' y='344' text-anchor='middle' class='sv-s'>Buses carry everything: <tspan font-weight='700'>data bus</tspan> = data · <tspan font-weight='700'>address bus</tspan> = locations · <tspan font-weight='700'>control bus</tspan> = signals.</text>"
++ "</svg>" },
+"3.3": { cap: "Conversion questions appear almost every year (2020, 2022 and 2025 all had them). Place values for binary→decimal and grouping in 4s for hex are the two fastest methods — learn both from this one picture.",
+svg: "<svg viewBox='0 0 720 330' role='img' aria-label='Three step panels converting binary 101011 to decimal 43 by place values, then to hex 2B by dividing by 16, checked by grouping bits in fours and threes'>"
++ "<circle cx='20' cy='18' r='11' class='bdg'/><text x='20' y='22' text-anchor='middle' class='bdg-t'>1</text><text x='40' y='23' class='sv-t'>Binary → decimal</text>"
++ "<circle cx='258' cy='18' r='11' class='bdg'/><text x='258' y='22' text-anchor='middle' class='bdg-t'>2</text><text x='278' y='23' class='sv-t'>Decimal → hex</text>"
++ "<circle cx='496' cy='18' r='11' class='bdg'/><text x='496' y='22' text-anchor='middle' class='bdg-t'>3</text><text x='516' y='23' class='sv-t'>Check by grouping bits</text>"
++ "<rect x='8' y='36' width='228' height='262' rx='10' class='sv-bx'/><rect x='246' y='36' width='228' height='262' rx='10' class='sv-bx'/><rect x='484' y='36' width='228' height='262' rx='10' class='sv-bx'/>"
++ "<text x='32' y='66' class='mono-b'>32</text><text x='66' y='66' class='mono-b'>16</text><text x='104' y='66' class='mono-b'>8</text><text x='136' y='66' class='mono-b'>4</text><text x='168' y='66' class='mono-b'>2</text><text x='200' y='66' class='mono-b'>1</text>"
++ "<rect x='24' y='74' width='30' height='38' class='sv-o'/><rect x='58' y='74' width='30' height='38' class='sv-bx'/><rect x='92' y='74' width='30' height='38' class='sv-o'/><rect x='126' y='74' width='30' height='38' class='sv-bx'/><rect x='160' y='74' width='30' height='38' class='sv-o'/><rect x='194' y='74' width='30' height='38' class='sv-o'/>"
++ "<text x='39' y='100' text-anchor='middle' class='mono-b'>1</text><text x='73' y='100' text-anchor='middle' class='mono-b' style='fill:var(--ink-3)'>0</text><text x='107' y='100' text-anchor='middle' class='mono-b'>1</text><text x='141' y='100' text-anchor='middle' class='mono-b' style='fill:var(--ink-3)'>0</text><text x='175' y='100' text-anchor='middle' class='mono-b'>1</text><text x='209' y='100' text-anchor='middle' class='mono-b'>1</text>"
++ "<text x='73' y='132' text-anchor='middle' class='sv-xs'>skip</text><text x='141' y='132' text-anchor='middle' class='sv-xs'>skip</text>"
++ "<text x='24' y='160' class='sv-s'>Add the place values where the bit is 1:</text>"
++ "<text x='24' y='192' class='mono-b'>32 + 8 + 2 + 1</text>"
++ "<text x='24' y='232' class='big'>= 43</text>"
++ "<text x='24' y='262' class='sv-s'>So 101011₂ = 43 in decimal.</text><text x='24' y='282' class='sv-s'>The leftmost bit is worth the most.</text>"
++ "<text x='262' y='92' class='mono'>43 ÷ 16 = 2 rem 11 → B</text>"
++ "<text x='262' y='122' class='mono'> 2 ÷ 16 = 0 rem 2</text>"
++ "<text x='262' y='156' class='sv-s'>Read the remainders upwards ↑</text>"
++ "<text x='262' y='196' class='big'>43 = 2B₁₆</text>"
++ "<text x='262' y='232' class='sv-s'>Remainders 10–15 are written</text><text x='262' y='250' class='sv-s'>as letters: 10=A … 15=F.</text>"
++ "<text x='262' y='276' class='sv-s'>Same method with ÷8 gives octal.</text>"
++ "<rect x='512' y='66' width='76' height='36' class='sv-o'/><rect x='600' y='66' width='76' height='36' class='sv-o'/>"
++ "<text x='550' y='90' text-anchor='middle' class='mono-b'>0010</text><text x='638' y='90' text-anchor='middle' class='mono-b'>1011</text>"
++ "<text x='550' y='128' text-anchor='middle' class='mono-b'>2</text><text x='638' y='128' text-anchor='middle' class='mono-b'>B</text>"
++ "<text x='500' y='158' class='sv-s'>Groups of 4 bits → 2B₁₆ ✓</text>"
++ "<text x='500' y='196' class='sv-s'>Groups of 3 bits → octal digits:</text>"
++ "<text x='500' y='226' class='mono-b'>101 011 → 5 3 = 53₈</text>"
++ "<text x='500' y='262' class='sv-s'>All three answers agree —</text><text x='500' y='280' class='sv-s'>that is how you know you are right.</text>"
++ "</svg>" },
+"4.1": { cap: "Gate questions give you a circuit or a table and ask for the missing output — Paper I tests single gates, Part II Q4 builds circuits from them. If you can write these three tables from memory, both are covered.",
+svg: "<svg viewBox='0 0 720 372' role='img' aria-label='AND, OR and NOT logic gate symbols with their truth tables: AND outputs 1 only when both inputs are 1, OR outputs 1 when any input is 1, NOT flips its input'>"
++ "<defs><marker id='m41' markerWidth='8' markerHeight='8' refX='7' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6 Z' style='fill:var(--ink-2)'/></marker></defs>"
++ "<text x='10' y='24' class='sv-t'>AND gate · F = A · B</text><text x='250' y='24' class='sv-t'>OR gate · F = A + B</text><text x='490' y='24' class='sv-t'>NOT gate · F = NOT A</text>"
++ "<text x='28' y='78' class='mono-b'>A</text><text x='28' y='110' class='mono-b'>B</text>"
++ "<line x1='44' y1='74' x2='62' y2='74' class='sv-ln'/><line x1='44' y1='106' x2='62' y2='106' class='sv-ln'/>"
++ "<path d='M62,58 L100,58 A32,32 0 0 1 100,122 L62,122 Z' class='sv-g'/>"
++ "<line x1='132' y1='90' x2='168' y2='90' class='sv-ln'/><text x='176' y='95' class='mono-b'>F</text>"
++ "<text x='268' y='78' class='mono-b'>A</text><text x='268' y='110' class='mono-b'>B</text>"
++ "<path d='M284,76 L302,78' class='sv-ln'/><path d='M284,108 L302,104' class='sv-ln'/>"
++ "<path d='M292,58 Q314,90 292,122 Q332,114 350,90 Q332,66 292,58 Z' class='sv-o'/>"
++ "<line x1='350' y1='90' x2='386' y2='90' class='sv-ln'/><text x='394' y='95' class='mono-b'>F</text>"
++ "<text x='492' y='95' class='mono-b'>A</text><line x1='508' y1='90' x2='532' y2='90' class='sv-ln'/>"
++ "<path d='M532,62 L532,118 L580,90 Z' class='sv-bl'/><circle cx='587' cy='90' r='6' style='fill:var(--surface);stroke:var(--ill-blue);stroke-width:1.5'/>"
++ "<line x1='593' y1='90' x2='626' y2='90' class='sv-ln'/><text x='634' y='95' class='mono-b'>F</text>"
++ "<rect x='55' y='150' width='108' height='26' class='sv-g'/><rect x='295' y='150' width='108' height='26' class='sv-o'/><rect x='545' y='150' width='72' height='26' class='sv-bl'/>"
++ "<text x='73' y='168' text-anchor='middle' class='mono-b'>A</text><text x='109' y='168' text-anchor='middle' class='mono-b'>B</text><text x='145' y='168' text-anchor='middle' class='mono-b'>F</text>"
++ "<text x='313' y='168' text-anchor='middle' class='mono-b'>A</text><text x='349' y='168' text-anchor='middle' class='mono-b'>B</text><text x='385' y='168' text-anchor='middle' class='mono-b'>F</text>"
++ "<text x='563' y='168' text-anchor='middle' class='mono-b'>A</text><text x='599' y='168' text-anchor='middle' class='mono-b'>F</text>"
++ "<rect x='55' y='176' width='108' height='104' class='sv-cell'/><rect x='295' y='176' width='108' height='104' class='sv-cell'/><rect x='545' y='176' width='72' height='52' class='sv-cell'/>"
++ "<rect x='55' y='254' width='108' height='26' style='fill:var(--accent-soft)'/><rect x='295' y='202' width='108' height='78' style='fill:var(--ochre-soft)'/>"
++ "<text x='73' y='194' text-anchor='middle' class='mono'>0</text><text x='109' y='194' text-anchor='middle' class='mono'>0</text><text x='145' y='194' text-anchor='middle' class='mono'>0</text>"
++ "<text x='73' y='220' text-anchor='middle' class='mono'>0</text><text x='109' y='220' text-anchor='middle' class='mono'>1</text><text x='145' y='220' text-anchor='middle' class='mono'>0</text>"
++ "<text x='73' y='246' text-anchor='middle' class='mono'>1</text><text x='109' y='246' text-anchor='middle' class='mono'>0</text><text x='145' y='246' text-anchor='middle' class='mono'>0</text>"
++ "<text x='73' y='272' text-anchor='middle' class='mono'>1</text><text x='109' y='272' text-anchor='middle' class='mono'>1</text><text x='145' y='272' text-anchor='middle' class='mono-b'>1</text>"
++ "<text x='313' y='194' text-anchor='middle' class='mono'>0</text><text x='349' y='194' text-anchor='middle' class='mono'>0</text><text x='385' y='194' text-anchor='middle' class='mono'>0</text>"
++ "<text x='313' y='220' text-anchor='middle' class='mono'>0</text><text x='349' y='220' text-anchor='middle' class='mono'>1</text><text x='385' y='220' text-anchor='middle' class='mono-b'>1</text>"
++ "<text x='313' y='246' text-anchor='middle' class='mono'>1</text><text x='349' y='246' text-anchor='middle' class='mono'>0</text><text x='385' y='246' text-anchor='middle' class='mono-b'>1</text>"
++ "<text x='313' y='272' text-anchor='middle' class='mono'>1</text><text x='349' y='272' text-anchor='middle' class='mono'>1</text><text x='385' y='272' text-anchor='middle' class='mono-b'>1</text>"
++ "<text x='563' y='194' text-anchor='middle' class='mono'>0</text><text x='599' y='194' text-anchor='middle' class='mono-b'>1</text>"
++ "<text x='563' y='220' text-anchor='middle' class='mono'>1</text><text x='599' y='220' text-anchor='middle' class='mono-b'>0</text>"
++ "<text x='10' y='312' class='sv-s'>Only ONE row gives 1 —</text><text x='10' y='330' class='sv-s'>both inputs must be 1.</text><text x='10' y='352' class='sv-s'>Think: a strict guard.</text>"
++ "<text x='250' y='312' class='sv-s'>Only ONE row gives 0 —</text><text x='250' y='330' class='sv-s'>any 1 switches the output on.</text><text x='250' y='352' class='sv-s'>Think: either switch lights the lamp.</text>"
++ "<text x='490' y='312' class='sv-s'>One input, flipped:</text><text x='490' y='330' class='sv-s'>1 becomes 0, 0 becomes 1.</text><text x='490' y='352' class='sv-s'>The bubble means NOT.</text>"
++ "</svg>" },
+"3.4": { cap: "Ordering questions are pure memory marks: ‘fastest to slowest’ is registers → cache → RAM → hard disk, and capacity runs the exact opposite way. This pyramid is the whole answer — picture it in the exam.",
+svg: "<svg viewBox='0 0 720 330' role='img' aria-label='Memory hierarchy pyramid: registers at the top, then cache, then RAM, then hard disk at the base; speed and cost per bit fall going down while capacity grows'>"
++ "<text x='20' y='28' class='sv-t'>The memory hierarchy — fast and tiny at the top, slow and huge at the base</text>"
++ "<polygon points='255,48 365,48 388,102 232,102' class='sv-r'/>"
++ "<polygon points='232,102 388,102 412,156 208,156' class='sv-o'/>"
++ "<polygon points='208,156 412,156 438,210 182,210' class='sv-bl'/>"
++ "<polygon points='182,210 438,210 466,264 154,264' class='sv-g'/>"
++ "<text x='310' y='72' text-anchor='middle' class='sv-t'>Registers</text><text x='310' y='90' text-anchor='middle' class='sv-s'>inside the CPU</text>"
++ "<text x='310' y='126' text-anchor='middle' class='sv-t'>Cache</text><text x='310' y='144' text-anchor='middle' class='sv-s'>KB – MB</text>"
++ "<text x='310' y='180' text-anchor='middle' class='sv-t'>RAM — main memory</text><text x='310' y='198' text-anchor='middle' class='sv-s'>GB · loses its contents when power goes off</text>"
++ "<text x='310' y='234' text-anchor='middle' class='sv-t'>Hard disk / SSD</text><text x='310' y='252' text-anchor='middle' class='sv-s'>TB · keeps data permanently</text>"
++ "<line x1='392' y1='75' x2='486' y2='75' class='sv-thin'/><line x1='416' y1='129' x2='486' y2='129' class='sv-thin'/><line x1='442' y1='183' x2='486' y2='183' class='sv-thin'/><line x1='470' y1='237' x2='486' y2='237' class='sv-thin'/>"
++ "<text x='492' y='79' class='sv-s'>fastest · dearest per bit</text>"
++ "<text x='492' y='133' class='sv-s'>very fast</text>"
++ "<text x='492' y='187' class='sv-s'>fast · volatile</text>"
++ "<text x='492' y='241' class='sv-s'>slowest · cheapest per bit</text>"
++ "<text transform='rotate(-90 66 156)' x='66' y='156' text-anchor='middle' class='sv-s'>speed increases ↑</text>"
++ "<line x1='88' y1='258' x2='88' y2='58' class='sv-ln'/><polygon points='88,48 83,60 93,60' style='fill:var(--ink-2)'/>"
++ "<text x='310' y='300' text-anchor='middle' class='sv-s'>Capacity increases on the way down: registers hold bytes, a hard disk holds terabytes.</text>"
++ "<text x='310' y='320' text-anchor='middle' class='sv-s'>The CPU works with the top of the pyramid; the disk is where files live between uses.</text>"
++ "</svg>" },
+"7.3": { cap: "Spreadsheet questions show a filled-down formula and ask what lands in each cell. Trace the $ exactly as here: whatever has a $ stays, everything else moves with the row.",
+svg: "<svg viewBox='0 0 720 352' role='img' aria-label='Spreadsheet grid where the tax rate 0.15 sits in cell D1 and the formula equals dollar D dollar 1 times B1 is filled down column C, so B changes each row while D1 stays locked'>"
++ "<defs><marker id='m73' markerWidth='8' markerHeight='8' refX='7' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6 Z' style='fill:var(--ink-2)'/></marker></defs>"
++ "<text x='40' y='28' class='sv-t'>One tax rate in D1 — every row uses it, thanks to the $ signs</text>"
++ "<rect x='40' y='52' width='34' height='30' class='sv-bx'/><rect x='74' y='52' width='96' height='30' class='sv-bx'/><rect x='170' y='52' width='120' height='30' class='sv-bx'/><rect x='290' y='52' width='190' height='30' class='sv-bx'/><rect x='480' y='52' width='130' height='30' class='sv-bx'/>"
++ "<text x='122' y='72' text-anchor='middle' class='sv-t'>Item</text><text x='230' y='72' text-anchor='middle' class='sv-t'>Amount</text><text x='385' y='72' text-anchor='middle' class='sv-t'>Tax</text><text x='545' y='72' text-anchor='middle' class='sv-t'>Tax rate</text>"
++ "<rect x='40' y='82' width='34' height='34' class='sv-bx'/><rect x='40' y='116' width='34' height='34' class='sv-bx'/><rect x='40' y='150' width='34' height='34' class='sv-bx'/>"
++ "<text x='57' y='104' text-anchor='middle' class='mono-b'>1</text><text x='57' y='138' text-anchor='middle' class='mono-b'>2</text><text x='57' y='172' text-anchor='middle' class='mono-b'>3</text>"
++ "<rect x='74' y='82' width='96' height='34' class='sv-cell'/><rect x='74' y='116' width='96' height='34' class='sv-cell'/><rect x='74' y='150' width='96' height='34' class='sv-cell'/>"
++ "<text x='84' y='104'>Rice</text><text x='84' y='138'>Dhal</text><text x='84' y='172'>Tea</text>"
++ "<rect x='170' y='82' width='120' height='34' class='sv-cell'/><rect x='170' y='116' width='120' height='34' class='sv-cell'/><rect x='170' y='150' width='120' height='34' class='sv-cell'/>"
++ "<text x='280' y='104' text-anchor='end' class='mono'>2 500</text><text x='280' y='138' text-anchor='end' class='mono'>1 800</text><text x='280' y='172' text-anchor='end' class='mono'>950</text>"
++ "<rect x='290' y='82' width='190' height='34' class='sv-g'/><rect x='290' y='116' width='190' height='34' class='sv-g'/><rect x='290' y='150' width='190' height='34' class='sv-g'/>"
++ "<text x='300' y='104' class='mono'>=$D$1*B1</text><text x='470' y='104' text-anchor='end' class='mono-b'>375</text>"
++ "<text x='300' y='138' class='mono'>=$D$1*B2</text><text x='470' y='138' text-anchor='end' class='mono-b'>270</text>"
++ "<text x='300' y='172' class='mono'>=$D$1*B3</text><text x='470' y='172' text-anchor='end' class='mono-b'>142.50</text>"
++ "<rect x='480' y='82' width='130' height='34' class='sv-o'/><rect x='480' y='116' width='130' height='34' class='sv-cell'/><rect x='480' y='150' width='130' height='34' class='sv-cell'/>"
++ "<text x='545' y='104' text-anchor='middle' class='mono-b'>0.15</text>"
++ "<line x1='648' y1='99' x2='648' y2='164' class='sv-ln' marker-end='url(#m73)'/><text x='660' y='128' class='sv-s'>fill</text><text x='660' y='144' class='sv-s'>down</text>"
++ "<text x='545' y='204' text-anchor='middle' class='sv-s'>D1 — the one fixed value</text>"
++ "<rect x='40' y='222' width='330' height='62' rx='8' class='sv-bl'/><rect x='390' y='222' width='290' height='62' rx='8' class='sv-o'/>"
++ "<text x='56' y='246' class='sv-t'>Relative — B1</text><text x='56' y='268' class='sv-s'>Becomes B2, then B3 as the formula fills down.</text>"
++ "<text x='406' y='246' class='sv-t'>Absolute — $D$1</text><text x='406' y='268' class='sv-s'>The $ locks the column and row: it never moves.</text>"
++ "<text x='360' y='316' text-anchor='middle' class='sv-s'>Forget the $ and row 2 multiplies by the empty D2 — the classic spreadsheet trap.</text>"
++ "<text x='360' y='336' text-anchor='middle' class='sv-s'>Mixed references like $B1 or B$1 lock only one direction.</text>"
++ "</svg>" },
+"9.4": { cap: "This mirrors O/L 2020 Paper I Q19–20 almost exactly: spot the field that is unique (primary key), then find that same value borrowed inside another table (foreign key) — that borrowed value is the relationship.",
+svg: "<svg viewBox='0 0 720 330' role='img' aria-label='Two database tables, Students and Classes: Student ID is the primary key of Students, Class ID is the primary key of Classes and appears in Students as a foreign key linking many students to one class'>"
++ "<rect x='30' y='52' width='340' height='30' class='sv-g'/><text x='46' y='72' class='sv-t'>STUDENTS</text>"
++ "<rect x='30' y='82' width='110' height='26' class='sv-bx'/><rect x='140' y='82' width='110' height='26' class='sv-bx'/><rect x='250' y='82' width='120' height='26' class='sv-bx'/>"
++ "<text x='40' y='100' class='mono-b u'>Student_ID</text><text x='150' y='100' class='mono-b'>Name</text><text x='260' y='100' class='mono-b'>Class_ID →</text>"
++ "<rect x='30' y='108' width='110' height='78' style='fill:var(--accent-soft)'/><rect x='250' y='108' width='120' height='78' style='fill:var(--ill-blue-soft)'/>"
++ "<rect x='30' y='108' width='340' height='26' class='sv-cell'/><rect x='30' y='134' width='340' height='26' class='sv-cell'/><rect x='30' y='160' width='340' height='26' class='sv-cell'/>"
++ "<text x='40' y='126' class='mono'>S01</text><text x='150' y='126'>Nimal</text><text x='260' y='126' class='mono'>10A</text>"
++ "<text x='40' y='152' class='mono'>S02</text><text x='150' y='152'>Kamala</text><text x='260' y='152' class='mono'>10A</text>"
++ "<text x='40' y='178' class='mono'>S03</text><text x='150' y='178'>Ruwan</text><text x='260' y='178' class='mono'>10B</text>"
++ "<rect x='450' y='52' width='240' height='30' class='sv-bl'/><text x='466' y='72' class='sv-t'>CLASSES</text>"
++ "<rect x='450' y='82' width='90' height='26' class='sv-bx'/><rect x='540' y='82' width='60' height='26' class='sv-bx'/><rect x='600' y='82' width='90' height='26' class='sv-bx'/>"
++ "<text x='458' y='100' class='mono-b u'>Class_ID</text><text x='548' y='100' class='mono-b'>Room</text><text x='608' y='100' class='mono-b'>Teacher</text>"
++ "<rect x='450' y='108' width='90' height='52' style='fill:var(--accent-soft)'/>"
++ "<rect x='450' y='108' width='240' height='26' class='sv-cell'/><rect x='450' y='134' width='240' height='26' class='sv-cell'/>"
++ "<text x='458' y='126' class='mono'>10A</text><text x='548' y='126' class='mono'>12</text><text x='608' y='126'>Mrs Perera</text>"
++ "<text x='458' y='152' class='mono'>10B</text><text x='548' y='152' class='mono'>14</text><text x='608' y='152'>Mr Silva</text>"
++ "<path d='M370,147 L450,121' class='sv-ln'/><text x='382' y='118' class='big'>∞</text><text x='428' y='112' class='mono-b'>1</text>"
++ "<text x='410' y='38' text-anchor='middle' class='sv-s'>many students → one class</text>"
++ "<rect x='30' y='216' width='330' height='66' rx='8' class='sv-g'/><rect x='390' y='216' width='300' height='66' rx='8' class='sv-bl'/>"
++ "<text x='46' y='240' class='sv-t'>PRIMARY KEY — Student_ID</text><text x='46' y='262' class='sv-s'>Identifies one record: never repeated, never empty.</text>"
++ "<text x='406' y='240' class='sv-t'>FOREIGN KEY — Class_ID</text><text x='406' y='262' class='sv-s'>CLASSES’ primary key, borrowed to build the link.</text>"
++ "<text x='360' y='308' text-anchor='middle' class='sv-s'>Splitting data into linked tables like this is what removes duplication (redundancy).</text>"
++ "</svg>" },
+"10.5": { cap: "Every ‘what is the output?’ question in Paper I and Part II is solved exactly like this: run the flowchart on paper and fill the trace table row by row. Students who guess lose the mark; students who trace never do.",
+svg: "<svg viewBox='0 0 720 368' role='img' aria-label='Flowchart of a loop that adds 1 to 4 into a variable sum, beside its trace table showing sum becoming 1, 3, 6, 10 before the loop exits and displays 10'>"
++ "<defs><marker id='m105' markerWidth='8' markerHeight='8' refX='7' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6 Z' style='fill:var(--ink-2)'/></marker></defs>"
++ "<text x='20' y='24' class='sv-t'>The loop, drawn</text><text x='440' y='24' class='sv-t'>The same loop, traced</text>"
++ "<ellipse cx='170' cy='48' rx='62' ry='20' class='sv-g'/><text x='170' y='53' text-anchor='middle' class='sv-t'>Start</text>"
++ "<line x1='170' y1='68' x2='170' y2='84' class='sv-ln' marker-end='url(#m105)'/>"
++ "<rect x='95' y='86' width='150' height='36' class='sv-bx'/><text x='170' y='109' text-anchor='middle' class='mono'>sum = 0, i = 1</text>"
++ "<line x1='170' y1='122' x2='170' y2='138' class='sv-ln' marker-end='url(#m105)'/>"
++ "<polygon points='170,140 248,178 170,216 92,178' class='sv-o'/><text x='170' y='183' text-anchor='middle' class='mono-b'>i ≤ 4 ?</text>"
++ "<line x1='170' y1='216' x2='170' y2='232' class='sv-ln' marker-end='url(#m105)'/><text x='180' y='230' class='sv-s'>Yes ↓</text>"
++ "<rect x='95' y='234' width='150' height='36' class='sv-bl'/><text x='170' y='257' text-anchor='middle' class='mono'>sum = sum + i</text>"
++ "<line x1='170' y1='270' x2='170' y2='286' class='sv-ln' marker-end='url(#m105)'/>"
++ "<rect x='95' y='288' width='150' height='36' class='sv-bl'/><text x='170' y='311' text-anchor='middle' class='mono'>i = i + 1</text>"
++ "<path d='M95,306 L58,306 L58,178 L90,178' class='sv-ln' marker-end='url(#m105)'/><text transform='rotate(-90 44 242)' x='44' y='242' text-anchor='middle' class='sv-s'>back to the test</text>"
++ "<line x1='248' y1='178' x2='292' y2='178' class='sv-ln' marker-end='url(#m105)'/><text x='262' y='166' class='sv-s'>No →</text>"
++ "<polygon points='312,156 402,156 388,198 298,198' class='sv-g'/><text x='350' y='182' text-anchor='middle' class='sv-t'>Display sum</text>"
++ "<line x1='350' y1='198' x2='350' y2='216' class='sv-ln' marker-end='url(#m105)'/>"
++ "<ellipse cx='350' cy='236' rx='54' ry='19' class='sv-g'/><text x='350' y='241' text-anchor='middle' class='sv-t'>End</text>"
++ "<rect x='440' y='44' width='60' height='28' class='sv-o'/><rect x='500' y='44' width='70' height='28' class='sv-o'/><rect x='570' y='44' width='140' height='28' class='sv-o'/>"
++ "<text x='470' y='63' text-anchor='middle' class='mono-b'>i</text><text x='535' y='63' text-anchor='middle' class='mono-b'>sum</text><text x='640' y='63' text-anchor='middle' class='mono-b'>what happens</text>"
++ "<rect x='440' y='72' width='270' height='28' class='sv-cell'/><rect x='440' y='100' width='270' height='28' class='sv-cell'/><rect x='440' y='128' width='270' height='28' class='sv-cell'/><rect x='440' y='156' width='270' height='28' class='sv-cell'/><rect x='440' y='184' width='270' height='28' class='sv-cell'/><rect x='440' y='212' width='270' height='28' class='sv-cell'/>"
++ "<text x='470' y='91' text-anchor='middle' class='mono'>1</text><text x='535' y='91' text-anchor='middle' class='mono'>0</text><text x='580' y='91' class='sv-s'>start: sum = 0</text>"
++ "<text x='470' y='119' text-anchor='middle' class='mono'>1</text><text x='535' y='119' text-anchor='middle' class='mono-b'>1</text><text x='580' y='119' class='sv-s'>round 1: 0 + 1</text>"
++ "<text x='470' y='147' text-anchor='middle' class='mono'>2</text><text x='535' y='147' text-anchor='middle' class='mono-b'>3</text><text x='580' y='147' class='sv-s'>round 2: 1 + 2</text>"
++ "<text x='470' y='175' text-anchor='middle' class='mono'>3</text><text x='535' y='175' text-anchor='middle' class='mono-b'>6</text><text x='580' y='175' class='sv-s'>round 3: 3 + 3</text>"
++ "<text x='470' y='203' text-anchor='middle' class='mono'>4</text><text x='535' y='203' text-anchor='middle' class='mono-b'>10</text><text x='580' y='203' class='sv-s'>round 4: 6 + 4</text>"
++ "<text x='470' y='231' text-anchor='middle' class='mono'>5</text><text x='535' y='231' text-anchor='middle' class='mono'>10</text><text x='580' y='231' class='sv-s'>i ≤ 4 is false → exit</text>"
++ "<rect x='440' y='252' width='270' height='34' rx='8' class='sv-g'/><text x='575' y='274' text-anchor='middle' class='sv-t'>Output displayed: 10</text>"
++ "<text x='440' y='316' class='sv-s'>Notice: the test uses the value of i BEFORE</text><text x='440' y='334' class='sv-s'>i = i + 1 runs — one row per trip round the loop.</text><text x='440' y='352' class='sv-s'>That ordering is where most marks are lost.</text>"
++ "</svg>" },
+"11.2": { cap: "Model-matching questions describe a real project and ask which model fits. Fixed, well-understood requirements → waterfall; users unsure what they want → prototyping/iterative. Read the situation, then pick the picture it matches.",
+svg: "<svg viewBox='0 0 720 416' role='img' aria-label='Waterfall SDLC drawn as descending steps that run once in order, contrasted with an iterative prototyping loop of plan, build, test and improve that repeats'>"
++ "<defs><marker id='m112' markerWidth='8' markerHeight='8' refX='7' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6 Z' style='fill:var(--ink-2)'/></marker></defs>"
++ "<text x='20' y='26' class='sv-t' style='fill:var(--ill-rust)'>WATERFALL — finish one phase, then drop to the next</text>"
++ "<rect x='20' y='42' width='110' height='40' rx='7' class='sv-r'/><rect x='132' y='72' width='110' height='40' rx='7' class='sv-r'/><rect x='244' y='102' width='110' height='40' rx='7' class='sv-r'/><rect x='356' y='132' width='110' height='40' rx='7' class='sv-r'/><rect x='468' y='162' width='110' height='40' rx='7' class='sv-r'/><rect x='580' y='192' width='120' height='40' rx='7' class='sv-r'/>"
++ "<text x='75' y='67' text-anchor='middle' class='sv-t'>Requirements</text><text x='187' y='97' text-anchor='middle' class='sv-t'>Analysis</text><text x='299' y='127' text-anchor='middle' class='sv-t'>Design</text><text x='411' y='157' text-anchor='middle' class='sv-t'>Coding</text><text x='523' y='187' text-anchor='middle' class='sv-t'>Testing</text><text x='640' y='210' text-anchor='middle' class='sv-t'>Implement +</text><text x='640' y='226' text-anchor='middle' class='sv-s'>maintain</text>"
++ "<path d='M130,62 L146,62 L146,70' class='sv-thin' marker-end='url(#m112)'/><path d='M242,92 L258,92 L258,100' class='sv-thin' marker-end='url(#m112)'/><path d='M354,122 L370,122 L370,130' class='sv-thin' marker-end='url(#m112)'/><path d='M466,152 L482,152 L482,160' class='sv-thin' marker-end='url(#m112)'/><path d='M578,182 L594,182 L594,190' class='sv-thin' marker-end='url(#m112)'/>"
++ "<text x='20' y='262' class='sv-s'>Each phase must finish before the next begins — there is no easy way back up the steps.</text>"
++ "<text x='20' y='280' class='sv-s'>Fits systems with fixed, well-understood requirements, like a payroll system with set rules.</text>"
++ "<text x='20' y='316' class='sv-t' style='fill:var(--ill-blue)'>ITERATIVE / PROTOTYPING — build a little, test it, improve, repeat</text>"
++ "<rect x='20' y='332' width='140' height='42' rx='7' class='sv-bl'/><rect x='196' y='332' width='150' height='42' rx='7' class='sv-bl'/><rect x='382' y='332' width='150' height='42' rx='7' class='sv-bl'/><rect x='568' y='332' width='132' height='42' rx='7' class='sv-bl'/>"
++ "<text x='90' y='358' text-anchor='middle' class='sv-t'>Plan</text><text x='271' y='358' text-anchor='middle' class='sv-t'>Build a prototype</text><text x='457' y='358' text-anchor='middle' class='sv-t'>Test with users</text><text x='634' y='358' text-anchor='middle' class='sv-t'>Improve</text>"
++ "<line x1='160' y1='353' x2='194' y2='353' class='sv-ln' marker-end='url(#m112)'/><line x1='346' y1='353' x2='380' y2='353' class='sv-ln' marker-end='url(#m112)'/><line x1='532' y1='353' x2='566' y2='353' class='sv-ln' marker-end='url(#m112)'/>"
++ "<path d='M634,374 L634,396 L90,396 L90,376' class='sv-ln' marker-end='url(#m112)'/><text x='362' y='410' text-anchor='middle' class='sv-s'>repeat the loop — each version is better, and users see the system early</text>"
++ "</svg>" },
+"2.5": { cap: "Papers show a network picture and ask you to name the topology, then ask what fails. Learn each shape with its weakness: star = the switch, bus = the backbone cable, ring = any break in the circle.",
+svg: "<svg viewBox='0 0 720 336' role='img' aria-label='Three network topologies side by side: star with all computers wired to a central switch, bus with computers tapped onto one backbone cable, and ring with computers connected in a circle'>"
++ "<text x='122' y='26' text-anchor='middle' class='sv-t'>STAR</text><text x='360' y='26' text-anchor='middle' class='sv-t'>BUS</text><text x='598' y='26' text-anchor='middle' class='sv-t'>RING</text>"
++ "<rect x='8' y='38' width='228' height='206' rx='10' class='sv-bx'/><rect x='246' y='38' width='228' height='206' rx='10' class='sv-bx'/><rect x='484' y='38' width='228' height='206' rx='10' class='sv-bx'/>"
++ "<line x1='92' y1='126' x2='56' y2='88' class='sv-ln'/><line x1='122' y1='118' x2='166' y2='88' class='sv-ln'/><line x1='122' y1='148' x2='66' y2='192' class='sv-ln'/><line x1='132' y1='148' x2='176' y2='192' class='sv-ln'/>"
++ "<rect x='34' y='62' width='44' height='26' rx='4' class='sv-g'/><rect x='166' y='62' width='44' height='26' rx='4' class='sv-g'/><rect x='44' y='192' width='44' height='26' rx='4' class='sv-g'/><rect x='166' y='192' width='44' height='26' rx='4' class='sv-g'/>"
++ "<text x='56' y='79' text-anchor='middle' class='sv-xs'>PC</text><text x='188' y='79' text-anchor='middle' class='sv-xs'>PC</text><text x='66' y='209' text-anchor='middle' class='sv-xs'>PC</text><text x='188' y='209' text-anchor='middle' class='sv-xs'>PC</text>"
++ "<rect x='92' y='118' width='60' height='30' rx='5' class='sv-o'/><text x='122' y='137' text-anchor='middle' class='sv-t'>switch</text>"
++ "<line x1='262' y1='140' x2='458' y2='140' style='stroke:var(--ink-2);stroke-width:3.5'/>"
++ "<rect x='258' y='128' width='8' height='24' class='sv-r'/><rect x='454' y='128' width='8' height='24' class='sv-r'/>"
++ "<line x1='292' y1='106' x2='292' y2='138' class='sv-ln'/><line x1='360' y1='106' x2='360' y2='138' class='sv-ln'/><line x1='428' y1='106' x2='428' y2='138' class='sv-ln'/><line x1='326' y1='142' x2='326' y2='174' class='sv-ln'/><line x1='394' y1='142' x2='394' y2='174' class='sv-ln'/>"
++ "<rect x='270' y='80' width='44' height='26' rx='4' class='sv-bl'/><rect x='338' y='80' width='44' height='26' rx='4' class='sv-bl'/><rect x='406' y='80' width='44' height='26' rx='4' class='sv-bl'/><rect x='304' y='174' width='44' height='26' rx='4' class='sv-bl'/><rect x='372' y='174' width='44' height='26' rx='4' class='sv-bl'/>"
++ "<text x='292' y='97' text-anchor='middle' class='sv-xs'>PC</text><text x='360' y='97' text-anchor='middle' class='sv-xs'>PC</text><text x='428' y='97' text-anchor='middle' class='sv-xs'>PC</text><text x='326' y='191' text-anchor='middle' class='sv-xs'>PC</text><text x='394' y='191' text-anchor='middle' class='sv-xs'>PC</text>"
++ "<text x='360' y='228' text-anchor='middle' class='sv-xs'>one shared backbone cable, with terminators</text>"
++ "<circle cx='598' cy='141' r='56' class='sv-thin'/>"
++ "<circle cx='598' cy='85' r='13' class='sv-o'/><circle cx='651' cy='118' r='13' class='sv-o'/><circle cx='633' cy='182' r='13' class='sv-o'/><circle cx='563' cy='182' r='13' class='sv-o'/><circle cx='545' cy='118' r='13' class='sv-o'/>"
++ "<text x='598' y='126' text-anchor='middle' class='sv-xs'>data travels</text><text x='598' y='142' text-anchor='middle' class='sv-xs'>one way</text><text x='598' y='158' text-anchor='middle' class='sv-xs'>round →</text>"
++ "<text x='24' y='272' class='sv-s'>One cable breaks → only that PC</text><text x='24' y='290' class='sv-s'>stops. The switch fails →</text><text x='24' y='308' class='sv-s'>the whole network stops.</text>"
++ "<text x='262' y='272' class='sv-s'>Cheap to set up, but a break in</text><text x='262' y='290' class='sv-s'>the backbone can stop</text><text x='262' y='308' class='sv-s'>the whole network.</text>"
++ "<text x='500' y='272' class='sv-s'>Each PC passes data to the</text><text x='500' y='290' class='sv-s'>next. One break can stop</text><text x='500' y='308' class='sv-s'>the ring.</text>"
++ "</svg>" },
+"12.1": { cap: "Paper I asks you to take an address apart — which part is the network, which is the host, and what DNS and each protocol do. Practise labelling this address until the parts feel automatic.",
+svg: "<svg viewBox='0 0 720 296' role='img' aria-label='Anatomy of the IPv4 address 192.168.1.25: four octets of eight bits each, the first three forming the network ID and the last the host ID'>"
++ "<text x='360' y='24' text-anchor='middle' class='sv-t'>An IPv4 address: four numbers, separated by dots — 32 bits in total</text>"
++ "<path d='M60,52 L60,44 L490,44 L490,52' class='sv-thin'/><text x='275' y='38' text-anchor='middle' class='sv-t' style='fill:var(--ill-blue)'>NETWORK ID — which network (the street)</text>"
++ "<rect x='60' y='56' width='120' height='62' rx='8' class='sv-bl'/><rect x='215' y='56' width='120' height='62' rx='8' class='sv-bl'/><rect x='370' y='56' width='120' height='62' rx='8' class='sv-bl'/><rect x='525' y='56' width='120' height='62' rx='8' class='sv-r'/>"
++ "<circle cx='197' cy='87' r='4' style='fill:var(--ink-2)'/><circle cx='352' cy='87' r='4' style='fill:var(--ink-2)'/><circle cx='507' cy='87' r='4' style='fill:var(--ink-2)'/>"
++ "<text x='120' y='97' text-anchor='middle' class='mono-b' style='font-size:22px'>192</text><text x='275' y='97' text-anchor='middle' class='mono-b' style='font-size:22px'>168</text><text x='430' y='97' text-anchor='middle' class='mono-b' style='font-size:22px'>1</text><text x='585' y='97' text-anchor='middle' class='mono-b' style='font-size:22px'>25</text>"
++ "<text x='120' y='140' text-anchor='middle' class='mono'>11000000</text><text x='275' y='140' text-anchor='middle' class='mono'>10101000</text><text x='430' y='140' text-anchor='middle' class='mono'>00000001</text><text x='585' y='140' text-anchor='middle' class='mono'>00011001</text>"
++ "<text x='360' y='162' text-anchor='middle' class='sv-s'>Each part (octet) is 8 bits — so each number runs from 0 to 255.</text>"
++ "<path d='M525,124 L525,134 L645,134 L645,124' class='sv-thin'/><text x='585' y='156' text-anchor='middle' class='sv-t' style='fill:var(--ill-rust)'>HOST ID</text>"
++ "<text x='585' y='176' text-anchor='middle' class='sv-s'>which computer on that</text><text x='585' y='192' text-anchor='middle' class='sv-s'>network (the house number)</text>"
++ "<text x='180' y='205' class='sv-s'>Every device needs its own address — no two hosts on a</text><text x='180' y='223' class='sv-s'>network may share one, or data goes to the wrong machine.</text>"
++ "<text x='180' y='253' class='sv-s'>You type a name; <tspan font-weight='700'>DNS</tspan> looks up the number.</text><text x='180' y='271' class='sv-s'>The full address of one page is its <tspan font-weight='700'>URL</tspan>.</text>"
++ "</svg>" },
+"13.1": { cap: "Raster-versus-vector is asked directly, and it hides inside the colour-depth calculation too (an n-bit pixel shows 2ⁿ colours). Remember: photos are raster, logos should be vector — and this picture is why.",
+svg: "<svg viewBox='0 0 720 330' role='img' aria-label='Raster image made of square pixels that turns jagged when zoomed, compared with a vector circle drawn from anchor points that stays smooth at any zoom'>"
++ "<text x='180' y='26' text-anchor='middle' class='sv-t'>RASTER — a grid of pixels</text><text x='540' y='26' text-anchor='middle' class='sv-t'>VECTOR — shapes stored as maths</text>"
++ "<rect x='8' y='38' width='344' height='254' rx='10' class='sv-bx'/><rect x='368' y='38' width='344' height='254' rx='10' class='sv-bx'/>"
++ "<rect x='62' y='76' width='13' height='13' class='sv-g'/><rect x='75' y='76' width='13' height='13' class='sv-g'/><rect x='88' y='76' width='13' height='13' class='sv-g'/><rect x='101' y='76' width='13' height='13' class='sv-g'/>"
++ "<rect x='49' y='89' width='13' height='13' class='sv-g'/><rect x='114' y='89' width='13' height='13' class='sv-g'/>"
++ "<rect x='36' y='102' width='13' height='13' class='sv-g'/><rect x='127' y='102' width='13' height='13' class='sv-g'/>"
++ "<rect x='36' y='115' width='13' height='13' class='sv-g'/><rect x='127' y='115' width='13' height='13' class='sv-g'/>"
++ "<rect x='36' y='128' width='13' height='13' class='sv-g'/><rect x='127' y='128' width='13' height='13' class='sv-g'/>"
++ "<rect x='36' y='141' width='13' height='13' class='sv-g'/><rect x='127' y='141' width='13' height='13' class='sv-g'/>"
++ "<rect x='49' y='154' width='13' height='13' class='sv-g'/><rect x='114' y='154' width='13' height='13' class='sv-g'/>"
++ "<rect x='62' y='167' width='13' height='13' class='sv-g'/><rect x='75' y='167' width='13' height='13' class='sv-g'/><rect x='88' y='167' width='13' height='13' class='sv-g'/><rect x='101' y='167' width='13' height='13' class='sv-g'/>"
++ "<text x='88' y='204' text-anchor='middle' class='sv-xs'>the picture, small</text>"
++ "<text x='148' y='142' class='sv-t'>→</text>"
++ "<rect x='170' y='70' width='154' height='132' class='sv-cell'/>"
++ "<path d='M192,70 L192,202 M214,70 L214,202 M236,70 L236,202 M258,70 L258,202 M280,70 L280,202 M302,70 L302,202 M170,92 L324,92 M170,114 L324,114 M170,136 L324,136 M170,158 L324,158 M170,180 L324,180' class='sv-thin'/>"
++ "<rect x='280' y='70' width='22' height='22' class='sv-g'/><rect x='302' y='70' width='22' height='22' class='sv-g'/><rect x='258' y='92' width='22' height='22' class='sv-g'/><rect x='236' y='114' width='22' height='22' class='sv-g'/><rect x='214' y='136' width='22' height='22' class='sv-g'/><rect x='192' y='158' width='22' height='22' class='sv-g'/><rect x='170' y='180' width='22' height='22' class='sv-g'/><rect x='192' y='180' width='22' height='22' class='sv-g'/>"
++ "<text x='247' y='220' text-anchor='middle' class='sv-xs'>the same curve, zoomed: squares and steps</text>"
++ "<text x='24' y='256' class='sv-s'>Enlarge it and the squares show — edges go jagged.</text><text x='24' y='274' class='sv-s'>Used for photographs: JPEG, PNG, BMP.</text>"
++ "<circle cx='478' cy='148' r='52' class='sv-bl'/>"
++ "<line x1='438' y1='96' x2='518' y2='96' stroke='var(--ill-blue)' stroke-width='1.2' stroke-dasharray='4 3'/><circle cx='438' cy='96' r='3' style='fill:var(--ill-blue)'/><circle cx='518' cy='96' r='3' style='fill:var(--ill-blue)'/>"
++ "<rect x='474' y='92' width='8' height='8' style='fill:var(--surface);stroke:var(--ill-blue);stroke-width:1.5'/><rect x='526' y='144' width='8' height='8' style='fill:var(--surface);stroke:var(--ill-blue);stroke-width:1.5'/><rect x='474' y='196' width='8' height='8' style='fill:var(--surface);stroke:var(--ill-blue);stroke-width:1.5'/><rect x='422' y='144' width='8' height='8' style='fill:var(--surface);stroke:var(--ill-blue);stroke-width:1.5'/>"
++ "<text x='478' y='226' text-anchor='middle' class='sv-xs'>anchor points + curves — no pixels at all</text>"
++ "<rect x='580' y='66' width='112' height='86' class='sv-bx'/><path d='M588,142 Q640,58 686,96' fill='none' stroke='var(--ill-blue)' stroke-width='2.5'/>"
++ "<text x='636' y='170' text-anchor='middle' class='sv-xs'>zoomed: still smooth</text>"
++ "<text x='384' y='256' class='sv-s'>Enlarge it and it redraws perfectly at any size.</text><text x='384' y='274' class='sv-s'>Used for logos and drawings: SVG.</text>"
++ "<text x='360' y='318' text-anchor='middle' class='sv-s'>File-size clue: a raster photo grows with every pixel; a vector logo stays tiny however big you print it.</text>"
++ "</svg>" },
+"14.2": { cap: "Papers print HTML code and ask what the browser shows — that is this tree being rendered. They also test the request chain: browser asks by HTTP, the server sends the file, the browser draws it. Learn both directions.",
+svg: "<svg viewBox='0 0 720 424' role='img' aria-label='Left, an HTML document tree with html containing head and title, and body containing a heading, paragraph and list; right, a browser and web server with the five steps of a page request listed below'>"
++ "<defs><marker id='m142' markerWidth='8' markerHeight='8' refX='7' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6 Z' style='fill:var(--ink-2)'/></marker></defs>"
++ "<text x='20' y='26' class='sv-t'>An HTML page is a tree of nested tags</text><text x='440' y='26' class='sv-t'>How the page reaches your screen</text>"
++ "<rect x='82' y='42' width='116' height='34' rx='7' class='sv-o'/><text x='140' y='64' text-anchor='middle' class='mono-b'>&lt;html&gt;</text>"
++ "<path d='M140,76 L140,90 L66,90 L66,106 M140,90 L214,90 L214,106' class='sv-thin'/>"
++ "<rect x='10' y='108' width='112' height='34' rx='7' class='sv-bl'/><text x='66' y='130' text-anchor='middle' class='mono-b'>&lt;head&gt;</text>"
++ "<rect x='158' y='108' width='112' height='34' rx='7' class='sv-g'/><text x='214' y='130' text-anchor='middle' class='mono-b'>&lt;body&gt;</text>"
++ "<line x1='66' y1='142' x2='66' y2='158' class='sv-thin'/>"
++ "<path d='M214,142 L214,152 L168,152 L168,158 M214,152 L232,152 L232,158 M214,152 L306,152 L306,158' class='sv-thin'/>"
++ "<rect x='10' y='160' width='112' height='34' rx='7' class='sv-bx'/><text x='66' y='182' text-anchor='middle' class='mono'>&lt;title&gt;</text>"
++ "<rect x='136' y='160' width='64' height='34' rx='7' class='sv-bx'/><text x='168' y='182' text-anchor='middle' class='mono'>&lt;h1&gt;</text>"
++ "<rect x='208' y='160' width='48' height='34' rx='7' class='sv-bx'/><text x='232' y='182' text-anchor='middle' class='mono'>&lt;p&gt;</text>"
++ "<rect x='264' y='160' width='84' height='34' rx='7' class='sv-bx'/><text x='306' y='182' text-anchor='middle' class='mono'>&lt;ul&gt;</text>"
++ "<path d='M306,194 L306,204 L288,204 L288,210 M306,204 L338,204 L338,210' class='sv-thin'/>"
++ "<rect x='258' y='212' width='60' height='32' rx='7' class='sv-bx'/><text x='288' y='233' text-anchor='middle' class='mono'>&lt;li&gt;</text>"
++ "<rect x='326' y='212' width='60' height='32' rx='7' class='sv-bx'/><text x='356' y='233' text-anchor='middle' class='mono'>&lt;li&gt;</text>"
++ "<text x='20' y='276' class='sv-s'>Tags nest inside each other — that nesting</text><text x='20' y='294' class='sv-s'>is the tree. The browser reads the tree</text><text x='20' y='312' class='sv-s'>and draws the page from it.</text>"
++ "<text x='20' y='342' class='sv-s'>&lt;title&gt; names the tab · &lt;h1&gt; the heading ·</text><text x='20' y='360' class='sv-s'>&lt;ul&gt; + &lt;li&gt; build a bulleted list.</text>"
++ "<rect x='450' y='44' width='240' height='50' rx='8' class='sv-g'/><text x='570' y='66' text-anchor='middle' class='sv-t'>YOUR BROWSER</text><text x='570' y='84' text-anchor='middle' class='sv-s'>the client — it asks and displays</text>"
++ "<rect x='450' y='150' width='240' height='50' rx='8' class='sv-o'/><text x='570' y='172' text-anchor='middle' class='sv-t'>WEB SERVER</text><text x='570' y='190' text-anchor='middle' class='sv-s'>stores the site’s files, day and night</text>"
++ "<line x1='520' y1='94' x2='520' y2='148' class='sv-ln' marker-end='url(#m142)'/>"
++ "<line x1='622' y1='150' x2='622' y2='96' class='sv-ln' marker-end='url(#m142)'/>"
++ "<text x='508' y='125' text-anchor='end' class='sv-xs'>request ↓</text><text x='634' y='125' class='sv-xs'>HTML ↑</text>"
++ "<text x='440' y='238' class='sv-t'>The journey, step by step</text>"
++ "<text x='440' y='266' class='sv-s'>1 · You type the URL, or click a link</text>"
++ "<text x='440' y='288' class='sv-s'>2 · DNS finds the server’s IP address</text>"
++ "<text x='440' y='310' class='sv-s'>3 · HTTP request: “send me that page”</text>"
++ "<text x='440' y='332' class='sv-s'>4 · The server sends the HTML file back</text>"
++ "<text x='440' y='354' class='sv-s'>5 · The browser builds the tree and displays it</text>"
++ "<text x='440' y='386' class='sv-s'>Publishing (unit 14.4) is how the files reached that</text><text x='440' y='404' class='sv-s'>server in the first place — uploaded there by FTP.</text>"
++ "</svg>" }
+};
+
 /* ==================== RENDERING ==================== */
 const $ = function(id){ return document.getElementById(id); };
 const esc = function(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); };
@@ -477,7 +808,9 @@ function renderComps(){
           + '<button class="read-btn" data-read="'+u.id+'" aria-pressed="'+(!!read)+'">'+(read?"Read ✓":"Mark as read")+'</button></div>'
           + '<ul>'+u.p.map(function(x){ return "<li>"+esc(x)+"</li>"; }).join("")+'</ul>';
         if (gd){
+          const il = ILLUS[u.id];
           html += '<div class="guide"><h5>Work through it — guided walkthrough</h5>'
+            + (il ? '<figure class="illus">'+il.svg+'<figcaption><strong>Exam angle — </strong>'+il.cap+'</figcaption></figure>' : '')
             + gd.steps.map(function(s, si){ return '<div class="wstep" data-step="'+u.id+'-'+si+'"><span class="wn2">'+(si+1)+'</span><p>'+esc(s)+'</p></div>'; }).join("")
             + '<button type="button" class="btn btn-ghost walk-btn" data-walk="'+u.id+'" data-n="0">Start the walkthrough</button></div>'
             + '<div class="tryit"><strong>Try it yourself — </strong>'+esc(gd.task)+'</div>';
