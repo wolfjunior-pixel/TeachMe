@@ -274,6 +274,31 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--ink-2);f
 .tb-p{color:var(--ink-2);font-size:15px;line-height:1.66;margin:0 0 10px}
 .tb-h{font-family:var(--font-display);font-size:15.5px;font-weight:600;color:var(--ink);margin:16px 0 6px}
 .tb-pre{font-family:var(--font-mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 12px;color:var(--ink-2)}
+/* ============ Chapter exam ============ */
+.cexam-card{display:flex;gap:16px;align-items:flex-start;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px;min-height:64px}
+.cexam-card:hover{border-color:var(--line-strong);background:var(--surface-2)}
+.cexam-card h4{font-family:var(--font-display);font-size:19px;font-weight:600;margin:0}
+.cexam-card .sub{color:var(--ink-2);font-size:14px;margin-top:3px}
+.cexam-last{margin-left:auto;flex:none;font-family:var(--font-mono);font-size:13px;color:var(--accent-strong);white-space:nowrap;padding-top:4px}
+.cexam-sec-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin:30px 0 14px}
+.cexam-sec-head h3{font-size:24px}
+.cexam-sec-head .marks{font-family:var(--font-mono);font-size:13px;color:var(--ink-3);letter-spacing:.05em;text-transform:uppercase}
+.cexam-q{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:14px}
+.cexam-q h4{font-family:var(--font-display);font-size:18.5px;font-weight:600;margin:0 0 12px;line-height:1.35}
+.cexam-q .qnum{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:6px}
+.mp-check{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-top:10px;cursor:pointer}
+.mp-check input{width:22px;height:22px;flex:none;accent-color:var(--accent);margin-top:1px;cursor:pointer}
+.mp-check span{flex:1;font-size:14.5px}
+.mp-check .pts{font-family:var(--font-mono);font-size:12.5px;color:var(--accent-strong);font-weight:700;white-space:nowrap;padding-top:2px}
+.cexam-total{font-family:var(--font-display);font-size:64px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.grade-pill{display:inline-block;font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.06em;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-strong);border-radius:99px;padding:6px 16px}
+.review-item{border:1px solid var(--line);border-radius:var(--radius);padding:13px 15px;margin-bottom:10px;background:var(--surface)}
+.review-item .rq{font-weight:600;font-size:15px;margin-bottom:4px}
+.review-item .ra{font-size:14px;color:var(--ink-2)}
+.review-item .ra strong{color:var(--ink)}
+.review-mark{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.review-mark.ok{color:var(--accent-strong)}
+.review-mark.no{color:var(--danger)}
 /* ============ Textbook tables ============ */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 table.tb-table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5;color:var(--ink)}
@@ -351,6 +376,18 @@ table.tb-table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.
         </div>
         <div id="drillBody" style="display:none"></div>
       </div>
+      <div id="cexamArea">
+        <div class="cexam-sec-head"><h3>Chapter exams</h3><span class="marks">Full papers · scored out of 100</span></div>
+        <button type="button" class="cexam-card" id="cexamCard">
+          <span style="flex:1;min-width:0">
+            <h4>Chapter Exam — Operating Systems</h4>
+            <span class="sub" style="display:block">Grade 10 · Chapter 5 · Total 100 marks · Suggested time 1 hour</span>
+            <span class="sub" style="display:block">Part A: 20 MCQs (40 marks) · Part B: 4 structured questions (60 marks)</span>
+          </span>
+          <span class="cexam-last" id="cexamLast"></span>
+        </button>
+      </div>
+      <div id="cexamBody" style="display:none"></div>
 
     </section>
 
@@ -974,7 +1011,7 @@ function renderAll(){ renderComps(); renderProgress(); }
    browser's localStorage under its own key (separate from the
    lesson/quiz progress store above). */
 const A_KEY = "ol-ict-ta-assess-v1";
-let astore = { comp:{}, streak:{cur:0,best:0,last:""}, exams:[], tot:{ans:0,cor:0,sp:0,sm:0} };
+let astore = { comp:{}, streak:{cur:0,best:0,last:""}, exams:[], tot:{ans:0,cor:0,sp:0,sm:0}, cexamOS:null };
 function aLoad(){ try { const raw = localStorage.getItem(A_KEY); if (raw) { const p = JSON.parse(raw); if (p && p.comp && p.streak && p.tot) astore = p; } } catch(e){} }
 function aSave(){ try { localStorage.setItem(A_KEY, JSON.stringify(astore)); } catch(e){} }
 function aComp(c){ if (!astore.comp[c]) astore.comp[c] = { a:0, cor:0, sp:0, sm:0 }; return astore.comp[c]; }
@@ -1047,8 +1084,8 @@ function renderAssess(){
   $("assessDash").innerHTML = html;
   $("aReset").addEventListener("click", function(){
     if (this.getAttribute("data-arm")) {
-      astore = { comp:{}, streak:{cur:0,best:0,last:""}, exams:[], tot:{ans:0,cor:0,sp:0,sm:0} };
-      aSave(); renderAssess();
+      astore = { comp:{}, streak:{cur:0,best:0,last:""}, exams:[], tot:{ans:0,cor:0,sp:0,sm:0}, cexamOS:null };
+      aSave(); renderAssess(); renderCExamCard();
     } else { this.setAttribute("data-arm", "1"); this.textContent = "Tap again to confirm — this clears scores and streaks"; }
   });
 }
@@ -1153,10 +1190,210 @@ function endDrill(){
   drill = null;
 }
 
+/* ==================== CHAPTER EXAM — OPERATING SYSTEMS ====================
+   Grade 10 · Chapter 5 · 100 marks. Part A: 20 MCQs x 2 = 40 (auto-marked).
+   Part B: 4 structured questions x 15 = 60 (self-marked against the marking
+   scheme, 5 points x 3 marks each). Content from the Operating System
+   chapter handout. Last attempt saved in the assessment store above. */
+const CE_MCQ = [
+ {q:"The booting instructions stored in the ROM are called —",o:["BIOS","Firmware","CMOS","Master Boot Record"],a:1},
+ {q:"\u201CBooting\u201D means —",o:["switching off the computer","loading the operating system into the main memory (RAM)","formatting the hard disk","installing application software"],a:1},
+ {q:"The Power-On Self Test (POST) is carried out —",o:["when a file is deleted","when the computer is switched on and the BIOS is activated","when a program is closed","when the Recycle Bin is emptied"],a:1},
+ {q:"During booting, the firmware reads which of the following from the boot drive?",o:["Recycle Bin","Clipboard","Master Boot Record (MBR)","Device driver"],a:2},
+ {q:"Which of the following is system software?",o:["Word processing software","A web browser","Operating system","A computer game"],a:2},
+ {q:"Which utility is used to prepare a storage device so that files and folders can be saved on it?",o:["Disk formatting","Spreadsheet","Task Manager","Screensaver"],a:0},
+ {q:"A compiler is an example of a —",o:["utility program","language translator","application software","device driver"],a:1},
+ {q:"MS-DOS is an example of a —",o:["multi-user operating system","real-time operating system","single-user operating system","multi-tasking operating system"],a:2},
+ {q:"ATM machines use which type of operating system?",o:["Single user","Multi user","Real time","Multi-tasking"],a:2},
+ {q:"Which pair contains only free and open source operating systems?",o:["Windows 10 and Mac OS","Ubuntu and Hanthana Linux","Windows XP and Windows Vista","Mac OS and Windows Server"],a:1},
+ {q:"Which operating system uses a Command Line Interface (CLI)?",o:["Windows 10","Ubuntu","MS-DOS","Mac OS"],a:2},
+ {q:"GUI components are abbreviated as WIMP. In WIMP, the letter \u201CP\u201D stands for —",o:["Panel","Pointer","Program","Picture"],a:1},
+ {q:"A device driver is —",o:["a program that controls a particular device connected to the computer","a storage device","a type of computer virus","a part of the monitor"],a:0},
+ {q:"\u201CPlug and play\u201D means —",o:["the device must be formatted before use","the driver software is installed automatically by the operating system","the device works without electricity","one driver works for every device"],a:1},
+ {q:"Which set shows the file attributes used in the Linux operating system?",o:["Read-only, Archive, Hidden, System","Read, Write, Execute","Copy, Paste, Delete","Open, Close, Save"],a:1},
+ {q:"The file extension .accdb belongs to —",o:["MS Word","MS Excel","MS PowerPoint","MS Access"],a:3},
+ {q:"A file deleted in Windows is temporarily stored in the —",o:["Clipboard","Recycle Bin","Task Manager","System tray"],a:1},
+ {q:"Disk defragmentation —",o:["deletes all files on the disk","rearranges fragmented data on the disk so the computer works more efficiently","divides one drive into several logical drives","copies files onto another drive"],a:1},
+ {q:"The Ext4 file system is used by —",o:["MS-DOS","Windows 98","Linux","Windows XP"],a:2},
+ {q:"Sequential access is the method used with —",o:["hard disks","magnetic tapes","DVDs","flash memory"],a:1}
+];
+const CE_STRUCT = [
+ {t:"The booting process",
+  q:"When a computer is switched on, a series of steps takes place before the desktop appears. Explain the booting process, including the roles of firmware, BIOS, POST, CMOS and the Master Boot Record.",
+  pts:["Firmware is the booting instructions stored in the ROM.",
+       "When power is switched ON, the BIOS (Basic Input Output System) is activated and it performs the POST (Power-On Self Test).",
+       "The BIOS works according to the settings stored in the CMOS memory.",
+       "The firmware reads the Master Boot Record (MBR) from the boot drive.",
+       "The operating system is loaded into the main memory (RAM) \u2014 loading the OS into RAM is booting."],
+  model:"The booting instructions stored in ROM are the firmware. When the computer is switched on, the BIOS is activated and runs the Power-On Self Test (POST), using the settings held in CMOS memory. The firmware then reads the Master Boot Record (MBR) from the boot drive, and the operating system is loaded into the main memory (RAM). This whole process of loading the operating system into main memory is called booting."},
+ {t:"Management tasks of the operating system",
+  q:"\u201CThe operating system manages the whole computer system.\u201D Describe five management tasks performed by the operating system.",
+  pts:["Process management \u2014 allocates CPU time, memory, files and input/output devices to processes so tasks complete properly.",
+       "Memory management \u2014 makes sure enough memory (RAM) is allocated to each process, and frees the memory when the process ends.",
+       "Device management \u2014 manages the devices of the system with the help of device controllers and device drivers.",
+       "File management \u2014 creating, modifying, deleting and renaming files and folders, changing storage location and creating backups.",
+       "Security management \u2014 protection through virus management, a firewall and passwords against unauthorized access."],
+  model:"The operating system performs process management (allocating CPU time, memory, files and I/O devices), memory management (allocating RAM to each process and freeing it afterwards), device management (through device controllers and drivers), file management (creating, modifying, deleting, renaming files and folders, and backups) and security management (virus protection, firewall and password protection)."},
+ {t:"File systems and file access",
+  q:"A school computer laboratory has both Windows and Linux computers. (a) Name the file system introduced by Microsoft and one file system used by Linux. (b) Explain the difference between sequential access and random (direct) access, giving one example of each. (c) State two advantages of the NTFS file system.",
+  pts:["NTFS (NT File System) is the file system technology introduced by Microsoft.",
+       "Ext4 (or ReiserFS) is a file system used by Linux.",
+       "Sequential access \u2014 information in the file is processed in order, one record after the other (e.g. magnetic tapes; used for payroll systems).",
+       "Random/direct access \u2014 there is no restriction on the order of reading and writing (e.g. hard disk, CD/DVD, flash memory).",
+       "NTFS advantages (any two): supports large partitions and big files; helps prevent hard disk failures; makes it possible to recover files."],
+  model:"(a) NTFS was introduced by Microsoft; Linux uses file systems such as Ext4 and ReiserFS. (b) In sequential access, records are processed in order, one after another, as with magnetic tapes. In random access there is no fixed order for reading and writing, as with hard disks, CDs/DVDs and flash memory. (c) NTFS supports large partitions and big files, helps prevent hard disk failures and makes file recovery possible."},
+ {t:"Disk utilities",
+  q:"A student\u2019s computer has become slow. Its single hard disk has files scattered in fragments all over the disk, and the student also wants to install both Windows and Ubuntu on the same machine. Name and explain the disk utilities and processes that help in this situation.",
+  pts:["Defragmentation \u2014 rearranges the fragmented data on the disk (pieces of files stored in different places) into order, creating larger free space.",
+       "Defragmentation increases the efficiency/speed of the hard disk, so the computer works more efficiently.",
+       "Partitioning \u2014 dividing an individual (physical) drive into multiple logical drives is called disk partitioning.",
+       "Partitioning is needed to keep different items in different places and to install more than one operating system on the same machine (e.g. Windows and Ubuntu).",
+       "Formatting prepares a storage device for initial use, and important files must be backed up before formatting."],
+  model:"Disk defragmentation rearranges the fragmented pieces of files on the disk into order, joining small free spaces into larger free space and increasing the efficiency of the hard disk. Disk partitioning divides one physical drive into multiple logical drives; this lets the student keep different items in different places and install more than one operating system (Windows and Ubuntu) on the same machine. If a drive must be formatted \u2014 prepared for initial use \u2014 important files should be backed up first."}
+];
+let cexam = null;
+function ceGrade(total){
+  if (total >= 75) return "A"; if (total >= 65) return "B";
+  if (total >= 55) return "C"; if (total >= 35) return "S"; return "W";
+}
+function renderCExamCard(){
+  const el = $("cexamLast"); if (!el) return;
+  const last = astore.cexamOS;
+  el.textContent = last ? "Last score: " + last.score + "/100" : "";
+}
+function ceShowChrome(inExam){
+  $("amode-drill").style.display = inExam ? "none" : "block";
+  $("cexamArea").style.display = inExam ? "none" : "block";
+  $("cexamBody").style.display = inExam ? "block" : "none";
+  if (!inExam) $("cexamBody").innerHTML = "";
+}
+$("cexamCard").addEventListener("click", function(){
+  ceShowChrome(true);
+  $("cexamBody").innerHTML = '<div class="qbox">'
+    + '<span class="qcount">Chapter exam · Grade 10 · Chapter 5</span>'
+    + '<h3 style="font-size:28px;margin:10px 0 6px">Chapter Exam \u2014 Operating Systems</h3>'
+    + '<p class="muted" style="margin-bottom:14px">Total 100 marks · Suggested time 1 hour</p>'
+    + '<div class="stat-row" style="margin:0 0 16px">'
+    + '<div class="stat"><div class="n">40</div><div class="l">Part A \u2014 20 MCQs \u00d7 2 marks, marked automatically</div></div>'
+    + '<div class="stat"><div class="n">60</div><div class="l">Part B \u2014 4 structured questions \u00d7 15 marks, self-marked</div></div>'
+    + '<div class="stat"><div class="n">100</div><div class="l">Total marks, with an O/L grade band (A 75+, B 65+, C 55+, S 35+, W below 35)</div></div>'
+    + '</div>'
+    + '<p style="margin-bottom:8px"><strong>How it works</strong></p>'
+    + '<ul style="margin:0 0 18px;padding-left:20px;color:var(--ink-2);font-size:15px;display:grid;gap:5px">'
+    + '<li>Part A: pick one answer per question. Your answers are marked when you finish.</li>'
+    + '<li>Part B: write each answer in your own words first. Then open the marking scheme and honestly tick every marking point your answer covers \u2014 each ticked point earns 3 marks.</li>'
+    + '<li>Answer everything on one page, then press <strong>Finish exam</strong> at the bottom to see your score out of 100.</li>'
+    + '</ul>'
+    + '<div class="quiz-nav"><button type="button" class="btn btn-ghost" id="ceBack0">Back to Assessment</button>'
+    + '<button type="button" class="btn btn-primary" id="ceStart">Start exam</button></div></div>';
+  $("ceBack0").addEventListener("click", function(){ ceShowChrome(false); });
+  $("ceStart").addEventListener("click", startCExam);
+  window.scrollTo({ top:0, behavior:"smooth" });
+});
+function ceProgressText(){
+  const a = cexam.picks.filter(function(p){ return p !== null; }).length;
+  let b = 0;
+  document.querySelectorAll("[data-cecb]").forEach(function(cb){ if (cb.checked) b += 3; });
+  return "Part A answered " + a + "/20 · Part B self-marked " + b + "/60 so far";
+}
+function ceUpdateProgress(){
+  document.querySelectorAll(".cexamProg").forEach(function(el){ el.textContent = ceProgressText(); });
+  CE_STRUCT.forEach(function(s, si){
+    const el = document.getElementById("ceBScore" + si); if (!el) return;
+    let n = 0;
+    document.querySelectorAll('[data-cecb="' + si + '"]').forEach(function(cb){ if (cb.checked) n += 3; });
+    el.textContent = "Self-marked: " + n + " / 15";
+  });
+}
+function startCExam(){
+  cexam = { picks: CE_MCQ.map(function(){ return null; }) };
+  let html = '<div class="exam-top"><button type="button" class="btn-quiet" id="ceBack1">\u2190 Back to Assessment</button>'
+    + '<span class="sess-line cexamProg"></span></div>'
+    + '<div class="cexam-sec-head"><h3>Part A \u2014 Multiple choice</h3><span class="marks">20 questions \u00d7 2 marks = 40 marks</span></div>';
+  CE_MCQ.forEach(function(q, qi){
+    html += '<div class="cexam-q"><span class="qnum">Question ' + (qi + 1) + ' · 2 marks</span><h4>' + esc(q.q) + '</h4><div class="opts">'
+      + q.o.map(function(opt, oi){ return '<button type="button" class="opt" data-ceq="' + qi + '" data-ceo="' + oi + '"><span class="letter">' + String.fromCharCode(65 + oi) + '</span><span>' + esc(opt) + '</span></button>'; }).join("")
+      + '</div></div>';
+  });
+  html += '<div class="cexam-sec-head"><h3>Part B \u2014 Structured questions</h3><span class="marks">4 questions \u00d7 15 marks = 60 marks</span></div>'
+    + '<p class="muted" style="margin-bottom:14px">Write your answer first. Then reveal the marking scheme and tick the points your answer covers \u2014 3 marks per point.</p>';
+  CE_STRUCT.forEach(function(s, si){
+    html += '<div class="cexam-q"><span class="qnum">Question B' + (si + 1) + ' · 15 marks</span><h4>' + esc(s.t) + '</h4>'
+      + '<p style="margin-bottom:12px">' + esc(s.q) + '</p>'
+      + '<textarea class="answerbox" id="ceAns' + si + '" placeholder="Write your answer here\u2026" aria-label="Your answer for question B' + (si + 1) + '"></textarea>'
+      + '<div class="quiz-nav"><button type="button" class="btn btn-ghost" id="ceSchemeBtn' + si + '">Show marking scheme</button>'
+      + '<span class="small muted" id="ceBScore' + si + '" style="align-self:center">Self-marked: 0 / 15</span></div>'
+      + '<div class="modelbox" id="ceScheme' + si + '"><h4>Marking scheme \u2014 tick each point your answer covers (3 marks each)</h4>'
+      + s.pts.map(function(p, pi){ return '<label class="mp-check"><input type="checkbox" data-cecb="' + si + '" /> <span>' + esc(p) + '</span><span class="pts">3 marks</span></label>'; }).join("")
+      + '<p style="margin-top:14px"><strong>Model answer:</strong> ' + esc(s.model) + '</p></div></div>';
+  });
+  html += '<div class="qbox" style="text-align:center"><span class="sess-line cexamProg"></span>'
+    + '<h3 style="font-size:24px;margin:10px 0 8px">Ready to finish?</h3>'
+    + '<p class="muted" style="margin-bottom:16px">Part A is marked automatically. Part B counts the marking points you ticked \u2014 make sure you have opened each marking scheme and marked honestly.</p>'
+    + '<button type="button" class="btn btn-primary" id="ceFinish">Finish exam</button></div>';
+  $("cexamBody").innerHTML = html;
+  $("ceBack1").addEventListener("click", function(){ cexam = null; ceShowChrome(false); });
+  document.querySelectorAll("[data-ceq]").forEach(function(b){
+    b.addEventListener("click", function(){
+      const qi = parseInt(b.getAttribute("data-ceq"), 10), oi = parseInt(b.getAttribute("data-ceo"), 10);
+      cexam.picks[qi] = oi;
+      document.querySelectorAll('[data-ceq="' + qi + '"]').forEach(function(x){ x.classList.toggle("picked", parseInt(x.getAttribute("data-ceo"), 10) === oi); });
+      ceUpdateProgress();
+    });
+  });
+  CE_STRUCT.forEach(function(s, si){
+    $("ceSchemeBtn" + si).addEventListener("click", function(){
+      const box = $("ceScheme" + si), open = box.classList.toggle("show");
+      this.textContent = open ? "Hide marking scheme" : "Show marking scheme";
+    });
+  });
+  document.querySelectorAll("[data-cecb]").forEach(function(cb){ cb.addEventListener("change", ceUpdateProgress); });
+  $("ceFinish").addEventListener("click", finishCExam);
+  ceUpdateProgress();
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+function finishCExam(){
+  let aCorrect = 0;
+  CE_MCQ.forEach(function(q, qi){ if (cexam.picks[qi] === q.a) aCorrect++; });
+  const partA = aCorrect * 2;
+  let partB = 0;
+  document.querySelectorAll("[data-cecb]").forEach(function(cb){ if (cb.checked) partB += 3; });
+  const total = partA + partB, pct = total, grade = ceGrade(total);
+  astore.cexamOS = { score: total, date: new Date().toISOString().slice(0, 10) };
+  aTouch(); aSave(); renderAssess(); renderCExamCard();
+  let review = "";
+  CE_MCQ.forEach(function(q, qi){
+    const pick = cexam.picks[qi], ok = pick === q.a;
+    review += '<div class="review-item"><span class="review-mark ' + (ok ? "ok" : "no") + '">' + (ok ? "Correct · +2" : (pick === null ? "Not answered · 0" : "Incorrect · 0")) + '</span>'
+      + '<p class="rq">' + (qi + 1) + '. ' + esc(q.q) + '</p>'
+      + '<p class="ra">Your answer: <strong>' + (pick === null ? "No answer" : String.fromCharCode(65 + pick) + ". " + esc(q.o[pick])) + '</strong>'
+      + (ok ? '' : '<br>Correct answer: <strong>' + String.fromCharCode(65 + q.a) + '. ' + esc(q.o[q.a]) + '</strong>') + '</p></div>';
+  });
+  $("cexamBody").innerHTML = '<div class="qbox" style="text-align:center">'
+    + '<span class="qcount">Chapter Exam \u2014 Operating Systems · results</span>'
+    + '<div class="cexam-total" style="margin:16px 0 4px">' + total + '<span class="muted" style="font-size:30px"> / 100</span></div>'
+    + '<p style="margin-bottom:12px"><span class="grade-pill">Grade ' + grade + '</span></p>'
+    + '<p class="muted">' + pct + '% overall</p>'
+    + '<div class="stat-row" style="text-align:left;margin-top:20px">'
+    + '<div class="stat"><div class="n">' + partA + ' / 40</div><div class="l">Part A \u2014 MCQs (' + aCorrect + ' of 20 correct)</div></div>'
+    + '<div class="stat"><div class="n">' + partB + ' / 60</div><div class="l">Part B \u2014 structured (self-marked)</div></div>'
+    + '<div class="stat"><div class="n">' + grade + '</div><div class="l">O/L grade band: A 75\u2013100 · B 65\u201374 · C 55\u201364 · S 35\u201354 · W 0\u201334</div></div>'
+    + '</div>'
+    + '<div class="quiz-nav" style="justify-content:center;margin-top:20px"><button type="button" class="btn btn-primary" id="ceRetake">Retake exam</button>'
+    + '<button type="button" class="btn btn-ghost" id="ceBack2">Back to Assessment</button></div></div>'
+    + '<div class="cexam-sec-head"><h3>Part A review</h3><span class="marks">' + aCorrect + ' / 20 correct</span></div>'
+    + review;
+  cexam = null;
+  $("ceRetake").addEventListener("click", function(){ $("cexamCard").click(); });
+  $("ceBack2").addEventListener("click", function(){ ceShowChrome(false); });
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+
 /* ==================== ASSESSMENT INIT ==================== */
 aLoad();
 fillChapterSelect($("dChap"), MCQ_BANK);
 drillPoolNote();
+renderCExamCard();
 
 /* ==================== NAVIGATION ==================== */
 function showView(name){
